@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dengar Suaraku – Platform Inklusif KMH</title>
+<meta name="description" content="Platform digital inklusif untuk anggota Komunitas Mata Hati Surabaya" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Lora:ital,wght@0,600;1,400&display=swap" rel="stylesheet" />
+<style>
+  /* ===== DESIGN TOKENS ===== */
+  :root {
+    --ink:       #1A1A2E;
+    --ink-soft:  #4A4A6A;
+    --canvas:    #F8F7FF;
+    --card:      #FFFFFF;
+    --pulse:     #6C47FF;   /* primary accent – purple (inklusif & digital) */
+    --pulse-lt:  #EDE8FF;
+    --leaf:      #00BFA5;   /* success / positive */
+    --leaf-lt:   #E0F7F4;
+    --amber:     #FFB830;   /* warning / highlight */
+    --amber-lt:  #FFF5DC;
+    --rose:      #FF5C7A;
+    --rose-lt:   #FFE8ED;
+    --border:    #E4E2F0;
+    --radius:    14px;
+    --radius-sm: 8px;
+    --shadow:    0 4px 24px rgba(108,71,255,.10);
+    --shadow-md: 0 8px 40px rgba(108,71,255,.16);
+  }
+
+  /* ===== RESET ===== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--canvas);
+    color: var(--ink);
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; }
+  img { max-width: 100%; display: block; }
+
+  /* ===== ACCESSIBILITY TOOLBAR ===== */
+  #a11y-bar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: var(--ink);
+    color: #fff;
+    display: flex; align-items: center; gap: 8px; padding: 6px 20px;
+    font-size: 12px; font-weight: 600;
+    flex-wrap: wrap;
+  }
+  #a11y-bar span { margin-right: auto; letter-spacing: .04em; font-size: 11px; opacity: .7; }
+  .a11y-btn {
+    background: rgba(255,255,255,.12); color: #fff;
+    border-radius: 20px; padding: 4px 12px; font-size: 11px; font-weight: 700;
+    border: 1px solid rgba(255,255,255,.2); transition: background .2s;
+    cursor: pointer;
+  }
+  .a11y-btn:hover, .a11y-btn.active { background: var(--pulse); border-color: var(--pulse); }
+  #font-size-display { min-width: 24px; text-align: center; font-weight: 800; }
+
+  /* ===== BODY STATES ===== */
+  body.high-contrast {
+    --ink: #000; --ink-soft: #111; --canvas: #fff; --card: #fff;
+    --border: #000; --pulse: #0000CC; --leaf: #006600; --rose: #CC0000;
+    --amber: #996600; --pulse-lt: #E0E0FF; --leaf-lt: #E0FFE0;
+  }
+  body.large-font { font-size: 18px; }
+
+  /* ===== NAV ===== */
+  nav {
+    position: fixed; top: 32px; left: 0; right: 0; z-index: 999;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 32px;
+    background: rgba(248,247,255,.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-brand {
+    display: flex; align-items: center; gap: 10px;
+    font-weight: 800; font-size: 17px; color: var(--pulse);
+  }
+  .nav-brand .icon {
+    width: 36px; height: 36px; background: var(--pulse);
+    border-radius: 10px; display: grid; place-items: center; color: #fff; font-size: 18px;
+  }
+  .nav-links {
+    display: flex; gap: 4px; list-style: none;
+  }
+  .nav-links a {
+    padding: 7px 14px; border-radius: var(--radius-sm);
+    font-weight: 600; font-size: 13px; color: var(--ink-soft);
+    transition: all .2s;
+  }
+  .nav-links a:hover, .nav-links a.active { background: var(--pulse-lt); color: var(--pulse); }
+
+  /* ===== MAIN LAYOUT ===== */
+  main { padding-top: 110px; }
+
+  /* ===== PAGES ===== */
+  .page { display: none; padding: 32px 24px 80px; max-width: 960px; margin: 0 auto; }
+  .page.active { display: block; }
+
+  /* ===== SECTION TITLES ===== */
+  .page-title {
+    font-family: 'Lora', serif; font-size: 2rem; font-weight: 600;
+    color: var(--ink); margin-bottom: 6px;
+  }
+  .page-sub { color: var(--ink-soft); font-size: 14px; margin-bottom: 28px; }
+
+  /* ===== CARDS ===== */
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow);
+    transition: box-shadow .2s, transform .2s;
+  }
+  .card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+
+  /* ===== GRID ===== */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 680px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    nav { padding: 10px 16px; }
+    .nav-links { display: none; }
+  }
+
+  /* ===== BADGE ===== */
+  .badge {
+    display: inline-block; padding: 3px 10px; border-radius: 20px;
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+  }
+  .badge-purple { background: var(--pulse-lt); color: var(--pulse); }
+  .badge-green  { background: var(--leaf-lt);  color: #00897B; }
+  .badge-amber  { background: var(--amber-lt); color: #E65100; }
+  .badge-rose   { background: var(--rose-lt);  color: #C62828; }
+
+  /* ===== BUTTONS ===== */
+  .btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 10px 20px; border-radius: var(--radius-sm);
+    font-weight: 700; font-size: 13px; transition: all .2s;
+    cursor: pointer;
+  }
+  .btn-primary { background: var(--pulse); color: #fff; }
+  .btn-primary:hover { background: #5535e0; }
+  .btn-outline { border: 2px solid var(--pulse); color: var(--pulse); }
+  .btn-outline:hover { background: var(--pulse-lt); }
+  .btn-green { background: var(--leaf); color: #fff; }
+  .btn-green:hover { background: #009688; }
+  .btn-sm { padding: 6px 14px; font-size: 12px; }
+
+  /* ===== HERO ===== */
+  #hero-section {
+    background: linear-gradient(135deg, var(--pulse) 0%, #9C27B0 100%);
+    border-radius: 20px; color: #fff; padding: 48px 40px; margin-bottom: 32px;
+    position: relative; overflow: hidden;
+  }
+  #hero-section::before {
+    content: ''; position: absolute; right: -40px; top: -40px;
+    width: 280px; height: 280px; border-radius: 50%;
+    background: rgba(255,255,255,.08);
+  }
+  #hero-section::after {
+    content: ''; position: absolute; right: 60px; bottom: -60px;
+    width: 180px; height: 180px; border-radius: 50%;
+    background: rgba(255,255,255,.05);
+  }
+  .hero-tag { background: rgba(255,255,255,.2); color: #fff; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: .1em; padding: 4px 12px; border-radius: 20px; display: inline-block; margin-bottom: 16px; }
+  .hero-title { font-family: 'Lora', serif; font-size: 2.4rem; font-weight: 600; line-height: 1.2; margin-bottom: 12px; position: relative; z-index: 1; }
+  .hero-desc { opacity: .88; font-size: 15px; max-width: 480px; margin-bottom: 24px; position: relative; z-index: 1; }
+  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; position: relative; z-index: 1; }
+  .hero-stat { display: flex; gap: 28px; margin-top: 32px; position: relative; z-index: 1; flex-wrap: wrap; }
+  .hero-stat-item strong { font-size: 1.8rem; font-weight: 800; display: block; }
+  .hero-stat-item span { opacity: .75; font-size: 12px; }
+
+  /* ===== BEASISWA ===== */
+  .scholarship-card { display: flex; flex-direction: column; gap: 10px; }
+  .scholarship-card h3 { font-size: 15px; font-weight: 700; }
+  .scholarship-card .meta { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .scholarship-card .deadline { color: var(--rose); font-size: 12px; font-weight: 600; }
+  .scholarship-card .desc { color: var(--ink-soft); font-size: 13px; }
+  .scholarship-card .actions { display: flex; gap: 8px; margin-top: 4px; }
+  .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+  .filter-chip {
+    padding: 6px 14px; border-radius: 20px; border: 1.5px solid var(--border);
+    font-size: 12px; font-weight: 600; color: var(--ink-soft); cursor: pointer; transition: all .2s;
+  }
+  .filter-chip.active, .filter-chip:hover { border-color: var(--pulse); background: var(--pulse-lt); color: var(--pulse); }
+  .search-input {
+    width: 100%; padding: 11px 16px; border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm); font-size: 14px; font-family: inherit;
+    background: var(--card); color: var(--ink); outline: none; margin-bottom: 16px;
+    transition: border-color .2s;
+  }
+  .search-input:focus { border-color: var(--pulse); }
+
+  /* ===== FORUM ===== */
+  .forum-post { display: flex; flex-direction: column; gap: 8px; }
+  .forum-post h3 { font-size: 14px; font-weight: 700; }
+  .forum-post .body { color: var(--ink-soft); font-size: 13px; }
+  .forum-meta { display: flex; gap: 12px; align-items: center; font-size: 12px; color: var(--ink-soft); flex-wrap: wrap; }
+  .avatar {
+    width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center;
+    font-weight: 800; font-size: 13px; color: #fff; flex-shrink: 0;
+  }
+  .voice-area {
+    border: 2px dashed var(--border); border-radius: var(--radius);
+    padding: 20px; text-align: center; background: var(--canvas);
+    margin: 16px 0;
+  }
+  .voice-btn {
+    width: 64px; height: 64px; border-radius: 50%; background: var(--pulse);
+    color: #fff; font-size: 28px; display: grid; place-items: center;
+    margin: 0 auto 12px; transition: all .2s; cursor: pointer;
+    box-shadow: 0 0 0 0 rgba(108,71,255,.4);
+  }
+  .voice-btn:hover { transform: scale(1.05); }
+  .voice-btn.recording {
+    animation: pulse-ring 1.2s ease-out infinite;
+    background: var(--rose);
+  }
+  @keyframes pulse-ring {
+    0% { box-shadow: 0 0 0 0 rgba(255,92,122,.5); }
+    70% { box-shadow: 0 0 0 20px rgba(255,92,122,0); }
+    100% { box-shadow: 0 0 0 0 rgba(255,92,122,0); }
+  }
+  .tts-bar { background: var(--leaf-lt); border: 1px solid var(--leaf); border-radius: var(--radius-sm); padding: 12px 16px; display: flex; gap: 10px; align-items: center; font-size: 13px; color: #00897B; }
+
+  /* ===== MAP ===== */
+  .campus-map {
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    overflow: hidden; position: relative; height: 320px; margin-bottom: 16px;
+  }
+  .map-visual {
+    width: 100%; height: 100%;
+    background: linear-gradient(135deg, #E8F5E9 0%, #E3F2FD 100%);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .map-pin {
+    position: absolute; width: 28px; height: 28px;
+    border-radius: 50% 50% 50% 0; transform: rotate(-45deg);
+    display: grid; place-items: center; cursor: pointer;
+    transition: transform .2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,.2);
+  }
+  .map-pin:hover { transform: rotate(-45deg) scale(1.2); }
+  .map-pin .pin-icon { transform: rotate(45deg); font-size: 12px; }
+  .pin-green  { background: var(--leaf); }
+  .pin-amber  { background: var(--amber); }
+  .pin-rose   { background: var(--rose); }
+  .map-legend { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 12px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 50%; }
+  .report-form { margin-top: 20px; }
+  .form-group { margin-bottom: 14px; }
+  .form-group label { display: block; font-size: 12px; font-weight: 700; color: var(--ink-soft); margin-bottom: 5px; text-transform: uppercase; letter-spacing: .05em; }
+  .form-control {
+    width: 100%; padding: 10px 14px; border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm); font-size: 14px; font-family: inherit;
+    background: var(--card); color: var(--ink); outline: none;
+    transition: border-color .2s;
+  }
+  .form-control:focus { border-color: var(--pulse); }
+  select.form-control { cursor: pointer; }
+
+  /* ===== BUDDY ===== */
+  .buddy-card { display: flex; gap: 14px; align-items: flex-start; }
+  .buddy-info h3 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .buddy-info p { font-size: 12px; color: var(--ink-soft); }
+  .buddy-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .buddy-tag { background: var(--pulse-lt); color: var(--pulse); padding: 2px 9px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+  .availability { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+  .avail-green { background: var(--leaf); }
+  .avail-amber { background: var(--amber); }
+
+  /* ===== FLOWCHART SECTION ===== */
+  .flowchart-wrap { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; overflow-x: auto; }
+  .fc { display: flex; flex-direction: column; align-items: center; gap: 0; }
+  .fc-row { display: flex; align-items: center; gap: 0; }
+  .fc-node {
+    padding: 10px 18px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 700;
+    text-align: center; min-width: 130px; max-width: 160px; border: 2px solid transparent;
+    white-space: normal; line-height: 1.4;
+  }
+  .fc-start  { background: var(--pulse); color: #fff; border-radius: 40px; border-color: var(--pulse); }
+  .fc-end    { background: var(--leaf); color: #fff; border-radius: 40px; border-color: var(--leaf); }
+  .fc-action { background: var(--pulse-lt); color: var(--pulse); border-color: var(--pulse); }
+  .fc-decide { background: var(--amber-lt); color: #8B4800; border-color: var(--amber); border-radius: 4px; transform: rotate(0deg); }
+  .fc-output { background: var(--leaf-lt); color: #00695C; border-color: var(--leaf); }
+  .fc-arrow { display: flex; flex-direction: column; align-items: center; gap: 0; color: var(--ink-soft); font-size: 18px; height: 28px; justify-content: center; }
+  .fc-arrow-h { color: var(--ink-soft); font-size: 18px; width: 28px; display: flex; align-items: center; justify-content: center; }
+  .fc-label { font-size: 10px; font-weight: 700; color: var(--ink-soft); }
+
+  /* ===== PRIVACY PAGE ===== */
+  .privacy-article h2 { font-family: 'Lora', serif; font-size: 1.3rem; margin: 28px 0 10px; color: var(--pulse); }
+  .privacy-article p { color: var(--ink-soft); font-size: 14px; margin-bottom: 10px; line-height: 1.7; }
+  .privacy-article ul { padding-left: 20px; color: var(--ink-soft); font-size: 14px; line-height: 1.8; }
+  .law-cite { background: var(--pulse-lt); border-left: 4px solid var(--pulse); padding: 12px 16px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-size: 13px; color: var(--ink); margin: 12px 0; font-style: italic; }
+  .law-cite strong { color: var(--pulse); font-style: normal; }
+
+  /* ===== TOAST ===== */
+  #toast {
+    position: fixed; bottom: 32px; right: 24px; z-index: 9999;
+    background: var(--ink); color: #fff; padding: 14px 20px; border-radius: var(--radius);
+    font-size: 13px; font-weight: 600; box-shadow: var(--shadow-md);
+    transform: translateY(80px); opacity: 0; transition: all .3s;
+    max-width: 320px;
+  }
+  #toast.show { transform: translateY(0); opacity: 1; }
+
+  /* ===== MODAL ===== */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 2000;
+    display: none; align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--card); border-radius: 20px; padding: 32px; max-width: 480px; width: 100%;
+    box-shadow: 0 20px 60px rgba(0,0,0,.3); position: relative;
+  }
+  .modal h2 { font-size: 1.2rem; font-weight: 800; margin-bottom: 8px; }
+  .modal p  { color: var(--ink-soft); font-size: 14px; margin-bottom: 20px; }
+  .modal-close { position: absolute; top: 16px; right: 16px; font-size: 20px; cursor: pointer; color: var(--ink-soft); }
+  .modal-close:hover { color: var(--ink); }
+
+  /* ===== DIVIDER ===== */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+  .section-header h2 { font-size: 1rem; font-weight: 800; }
+
+  /* ===== TTS PLAYBACK ===== */
+  .tts-controls { display: flex; align-items: center; gap: 10px; }
+  .tts-controls button { background: var(--leaf); color: #fff; border-radius: 50%; width: 36px; height: 36px; display: grid; place-items: center; font-size: 16px; }
+</style>
+</head>
+<body>
+
+<!-- Accessibility Toolbar -->
+<div id="a11y-bar" role="toolbar" aria-label="Aksesibilitas">
+  <span>♿ Aksesibilitas</span>
+  <button class="a11y-btn" onclick="toggleContrast()" id="btn-contrast" aria-pressed="false">Kontras Tinggi</button>
+  <button class="a11y-btn" onclick="changeFontSize(-1)" aria-label="Perkecil teks">A−</button>
+  <span id="font-size-display">15</span>px
+  <button class="a11y-btn" onclick="changeFontSize(1)" aria-label="Perbesar teks">A+</button>
+  <button class="a11y-btn" onclick="readPage()" id="btn-tts" aria-label="Baca halaman">🔊 Baca Halaman</button>
+</div>
+
+<!-- Navigation -->
+<nav role="navigation" aria-label="Navigasi utama">
+  <div class="nav-brand">
+    <div class="icon" aria-hidden="true">👂</div>
+    Dengar Suaraku
+  </div>
+  <ul class="nav-links" role="list">
+    <li><a href="#" class="active" onclick="showPage('home', this)">Beranda</a></li>
+    <li><a href="#" onclick="showPage('beasiswa', this)">Beasiswa & Karir</a></li>
+    <li><a href="#" onclick="showPage('forum', this)">Forum</a></li>
+    <li><a href="#" onclick="showPage('peta', this)">Peta Akses</a></li>
+    <li><a href="#" onclick="showPage('buddy', this)">Buddy & Mentor</a></li>
+    <li><a href="#" onclick="showPage('flowchart', this)">Alur Sistem</a></li>
+    <li><a href="#" onclick="showPage('privasi', this)">Privasi</a></li>
+  </ul>
+</nav>
+
+<main>
+
+<!-- ======== PAGE: HOME ======== -->
+<section class="page active" id="page-home">
+  <div id="hero-section">
+    <div class="hero-tag">Platform Inklusif · Komunitas Mata Hati</div>
+    <h1 class="hero-title">Dengar<br>Suaraku</h1>
+    <p class="hero-desc">Satu platform untuk anggota KMH — temukan beasiswa, berdiskusi tanpa batas, petakan aksesibilitas kampus, dan temukan mentor yang tepat.</p>
+    <div class="hero-actions">
+      <button class="btn btn-primary" onclick="showPage('beasiswa', null)" style="background:#fff;color:var(--pulse);">🎓 Cari Beasiswa</button>
+      <button class="btn btn-outline" onclick="showPage('forum', null)" style="border-color:#fff;color:#fff;">💬 Bergabung Forum</button>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-item"><strong>53</strong><span>Anggota KMH</span></div>
+      <div class="hero-stat-item"><strong>18</strong><span>Beasiswa Aktif</span></div>
+      <div class="hero-stat-item"><strong>24</strong><span>Mentor Siap</span></div>
+      <div class="hero-stat-item"><strong>Sejak 2000</strong><span>Bersama Inklusif</span></div>
+    </div>
+  </div>
+
+  <div class="grid-3" style="margin-bottom:28px;">
+    <div class="card" style="border-left:4px solid var(--pulse);">
+      <div style="font-size:28px;margin-bottom:10px;">🎓</div>
+      <h3 style="font-size:14px;font-weight:800;margin-bottom:6px;">Smart Scholarship Hub</h3>
+      <p style="font-size:13px;color:var(--ink-soft);">Cari beasiswa dan lowongan kerja ramah disabilitas yang dikurasi khusus untuk kamu.</p>
+      <button class="btn btn-outline btn-sm" style="margin-top:12px;" onclick="showPage('beasiswa', null)">Jelajahi →</button>
+    </div>
+    <div class="card" style="border-left:4px solid var(--leaf);">
+      <div style="font-size:28px;margin-bottom:10px;">🎙️</div>
+      <h3 style="font-size:14px;font-weight:800;margin-bottom:6px;">Forum Inklusif</h3>
+      <p style="font-size:13px;color:var(--ink-soft);">Berdiskusi dengan Voice-to-Text & Text-to-Voice. Tak ada batasan dalam menyuarakan pendapat.</p>
+      <button class="btn btn-outline btn-sm" style="margin-top:12px;border-color:var(--leaf);color:var(--leaf);" onclick="showPage('forum', null)">Bergabung →</button>
+    </div>
+    <div class="card" style="border-left:4px solid var(--amber);">
+      <div style="font-size:28px;margin-bottom:10px;">🗺️</div>
+      <h3 style="font-size:14px;font-weight:800;margin-bottom:6px;">Peta Aksesibilitas</h3>
+      <p style="font-size:13px;color:var(--ink-soft);">Lihat dan laporkan fasilitas kampus ramah difabel. Data nyata untuk advokasi nyata.</p>
+      <button class="btn btn-outline btn-sm" style="margin-top:12px;border-color:var(--amber);color:#E65100;" onclick="showPage('peta', null)">Lihat Peta →</button>
+    </div>
+  </div>
+
+  <div class="card" style="background:linear-gradient(135deg,var(--leaf-lt),var(--pulse-lt));border:none;">
+    <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
+      <div style="font-size:40px;">🤝</div>
+      <div>
+        <h3 style="font-size:15px;font-weight:800;margin-bottom:4px;">Sistem Buddy & Mentoring</h3>
+        <p style="font-size:13px;color:var(--ink-soft);">Mahasiswa baru? Temukan kakak tingkat difabel atau relawan yang siap menemanimu.</p>
+      </div>
+      <button class="btn btn-green" style="margin-left:auto;" onclick="showPage('buddy', null)">Cari Mentor</button>
+    </div>
+  </div>
+</section>
+
+<!-- ======== PAGE: BEASISWA ======== -->
+<section class="page" id="page-beasiswa">
+  <h1 class="page-title">🎓 Beasiswa & Karir</h1>
+  <p class="page-sub">Semua informasi dikurasi khusus — 100% ramah disabilitas, aksesibel, tanpa diskriminasi.</p>
+
+  <input class="search-input" type="search" id="scholarship-search" placeholder="🔍  Cari beasiswa, magang, atau pelatihan..." aria-label="Cari beasiswa" oninput="filterScholarships()" />
+
+  <div class="filter-bar" role="group" aria-label="Filter kategori">
+    <button class="filter-chip active" onclick="setFilter(this,'all')">Semua</button>
+    <button class="filter-chip" onclick="setFilter(this,'beasiswa')">🎓 Beasiswa</button>
+    <button class="filter-chip" onclick="setFilter(this,'magang')">💼 Magang</button>
+    <button class="filter-chip" onclick="setFilter(this,'pelatihan')">📚 Pelatihan</button>
+    <button class="filter-chip" onclick="setFilter(this,'kerja')">🏢 Lowongan Kerja</button>
+  </div>
+
+  <div id="scholarship-list" class="grid-2"></div>
+</section>
+
+<!-- ======== PAGE: FORUM ======== -->
+<section class="page" id="page-forum">
+  <h1 class="page-title">💬 Forum Inklusif</h1>
+  <p class="page-sub">Berdiskusi tanpa batas — tulis teks atau rekam suaramu, kami ubah otomatis.</p>
+
+  <!-- TTS/STT panel -->
+  <div class="card" style="margin-bottom:24px;">
+    <div class="section-header">
+      <h2>✍️ Buat Postingan Baru</h2>
+    </div>
+    <input class="search-input" type="text" id="post-title" placeholder="Judul diskusi..." />
+    <textarea class="form-control" id="post-body" rows="3" placeholder="Tulis pesanmu di sini, atau gunakan rekam suara di bawah..." style="resize:vertical;margin-bottom:14px;"></textarea>
+
+    <div class="voice-area">
+      <button class="voice-btn" id="voice-btn" onclick="toggleRecording()" aria-label="Tombol rekam suara" title="Klik untuk merekam suara">🎙️</button>
+      <p style="font-size:13px;color:var(--ink-soft);" id="voice-status">Klik mikrofon untuk mulai merekam. Suara kamu akan diubah menjadi teks otomatis.</p>
+    </div>
+
+    <div class="tts-bar" style="margin-bottom:14px;">
+      <span>🔊</span>
+      <span style="flex:1;">Aktifkan Text-to-Voice: teks postingan akan dibacakan otomatis untuk teman tunanetra.</span>
+      <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+        <input type="checkbox" id="tts-toggle" style="width:16px;height:16px;" />
+        <span style="font-size:12px;font-weight:700;">Aktifkan</span>
+      </label>
+    </div>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <button class="btn btn-primary" onclick="submitPost()">📤 Kirim Diskusi</button>
+      <button class="btn btn-outline" onclick="speakText('post-body')">🔊 Dengarkan Tulisan</button>
+    </div>
+  </div>
+
+  <div id="forum-posts" class="grid-2"></div>
+</section>
+
+<!-- ======== PAGE: PETA ======== -->
+<section class="page" id="page-peta">
+  <h1 class="page-title">🗺️ Peta Aksesibilitas Kampus</h1>
+  <p class="page-sub">Lihat mana yang sudah ramah difabel, dan laporkan yang belum.</p>
+
+  <div class="campus-map">
+    <div class="map-visual">
+      <!-- Simulated campus map -->
+      <svg width="100%" height="100%" viewBox="0 0 700 300" aria-label="Peta kampus simulasi">
+        <!-- Ground -->
+        <rect width="700" height="300" fill="#E8F5E9"/>
+        <!-- Roads -->
+        <rect x="0" y="140" width="700" height="20" fill="#CFD8DC" opacity=".8"/>
+        <rect x="340" y="0" width="20" height="300" fill="#CFD8DC" opacity=".8"/>
+        <!-- Buildings -->
+        <rect x="40" y="40" width="120" height="80" rx="6" fill="#B2DFDB" stroke="#80CBC4" stroke-width="1.5"/>
+        <text x="100" y="85" text-anchor="middle" font-size="11" font-weight="bold" fill="#004D40">Gedung A</text>
+        <rect x="200" y="40" width="110" height="80" rx="6" fill="#BBDEFB" stroke="#90CAF9" stroke-width="1.5"/>
+        <text x="255" y="85" text-anchor="middle" font-size="11" font-weight="bold" fill="#01579B">Perpustakaan</text>
+        <rect x="390" y="30" width="130" height="90" rx="6" fill="#F8BBD9" stroke="#F48FB1" stroke-width="1.5"/>
+        <text x="455" y="80" text-anchor="middle" font-size="11" font-weight="bold" fill="#880E4F">Rektorat</text>
+        <rect x="560" y="40" width="100" height="80" rx="6" fill="#FFF9C4" stroke="#FFF176" stroke-width="1.5"/>
+        <text x="610" y="85" text-anchor="middle" font-size="11" font-weight="bold" fill="#F57F17">Kantin</text>
+        <rect x="40" y="185" width="150" height="85" rx="6" fill="#D1C4E9" stroke="#B39DDB" stroke-width="1.5"/>
+        <text x="115" y="231" text-anchor="middle" font-size="11" font-weight="bold" fill="#4A148C">Auditorium</text>
+        <rect x="230" y="185" width="100" height="85" rx="6" fill="#C8E6C9" stroke="#A5D6A7" stroke-width="1.5"/>
+        <text x="280" y="231" text-anchor="middle" font-size="11" font-weight="bold" fill="#1B5E20">UKM Hall</text>
+        <rect x="390" y="180" width="260" height="90" rx="6" fill="#FFE0B2" stroke="#FFCC80" stroke-width="1.5"/>
+        <text x="520" y="229" text-anchor="middle" font-size="11" font-weight="bold" fill="#E65100">Lab Komputer</text>
+      </svg>
+
+      <!-- Map Pins (positioned over SVG) -->
+      <div class="map-pin pin-green" style="left:13%;top:22%;position:absolute;" title="Gedung A – Ramp tersedia ✓" onclick="showPinInfo('Gedung A','Ramp kursi roda ✓, Lift ✓, Toilet difabel ✓','green')"><span class="pin-icon">♿</span></div>
+      <div class="map-pin pin-green" style="left:35%;top:18%;position:absolute;" title="Perpustakaan – Aksesibel ✓" onclick="showPinInfo('Perpustakaan','Ramp ✓, Braile reader tersedia ✓, Audio tour ✓','green')"><span class="pin-icon">📚</span></div>
+      <div class="map-pin pin-amber" style="left:63%;top:15%;position:absolute;" title="Rektorat – Sebagian aksesibel" onclick="showPinInfo('Rektorat','Ramp ada, tapi lift RUSAK ⚠️ – perlu advokasi','amber')"><span class="pin-icon">⚠️</span></div>
+      <div class="map-pin pin-rose"  style="left:82%;top:20%;position:absolute;" title="Kantin – Belum aksesibel" onclick="showPinInfo('Kantin','Tidak ada ramp ✗, Lantai licin ✗ – perlu perbaikan','rose')"><span class="pin-icon">✗</span></div>
+      <div class="map-pin pin-green" style="left:16%;top:70%;position:absolute;" title="Auditorium – Aksesibel ✓" onclick="showPinInfo('Auditorium','Pintu otomatis ✓, Kursi prioritas ✓, Loop induksi ✓','green')"><span class="pin-icon">🎭</span></div>
+      <div class="map-pin pin-rose"  style="left:40%;top:72%;position:absolute;" title="UKM Hall – Belum aksesibel" onclick="showPinInfo('UKM Hall','Tangga tanpa ramp ✗, Toilet tidak inklusif ✗','rose')"><span class="pin-icon">✗</span></div>
+      <div class="map-pin pin-amber" style="left:72%;top:68%;position:absolute;" title="Lab Komputer – Sebagian" onclick="showPinInfo('Lab Komputer','Perangkat screen-reader tersedia di 3 komputer ✓, Tapi akses fisik terbatas ⚠️','amber')"><span class="pin-icon">💻</span></div>
+    </div>
+  </div>
+
+  <div class="map-legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--leaf);"></div>Aksesibel</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--amber);"></div>Sebagian Aksesibel</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--rose);"></div>Tidak Aksesibel</div>
+  </div>
+
+  <hr class="divider" />
+
+  <div class="section-header">
+    <h2>📍 Laporkan Masalah Aksesibilitas</h2>
+  </div>
+
+  <div class="card report-form">
+    <div class="grid-2">
+      <div class="form-group">
+        <label for="report-loc">Lokasi</label>
+        <select class="form-control" id="report-loc">
+          <option>Gedung A</option>
+          <option>Perpustakaan</option>
+          <option>Rektorat</option>
+          <option>Kantin</option>
+          <option>Auditorium</option>
+          <option>UKM Hall</option>
+          <option>Lab Komputer</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="report-type">Jenis Masalah</label>
+        <select class="form-control" id="report-type">
+          <option>Ramp rusak/tidak ada</option>
+          <option>Lift tidak berfungsi</option>
+          <option>Toilet tidak inklusif</option>
+          <option>Jalur tunanetra hilang</option>
+          <option>Pintu terlalu berat</option>
+          <option>Lainnya</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="report-desc">Deskripsi Detail</label>
+      <textarea class="form-control" id="report-desc" rows="3" placeholder="Ceritakan kondisinya secara detail..."></textarea>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <button class="btn btn-primary" onclick="submitReport()">📤 Kirim Laporan</button>
+      <button class="btn btn-outline" onclick="speakText('report-desc')">🔊 Dengarkan</button>
+    </div>
+  </div>
+</section>
+
+<!-- ======== PAGE: BUDDY ======== -->
+<section class="page" id="page-buddy">
+  <h1 class="page-title">🤝 Buddy & Mentoring</h1>
+  <p class="page-sub">Kamu tidak sendirian. Temukan mentor yang tepat untuk perjalanan akademikmu.</p>
+
+  <div class="card" style="background:var(--pulse-lt);border-color:var(--pulse);margin-bottom:24px;">
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+      <div style="font-size:36px;">🔍</div>
+      <div style="flex:1;">
+        <h3 style="font-weight:800;margin-bottom:6px;">Temukan Mentor Untukmu</h3>
+        <p style="font-size:13px;color:var(--ink-soft);">Kami akan mencocokkan kamu dengan mentor berdasarkan jenis disabilitas dan kebutuhanmu.</p>
+      </div>
+      <button class="btn btn-primary" onclick="openMatchModal()">Mulai Pencocokan</button>
+    </div>
+  </div>
+
+  <div class="section-header">
+    <h2>👥 Mentor Tersedia</h2>
+    <span class="badge badge-green">24 Aktif</span>
+  </div>
+
+  <div id="buddy-list" class="grid-2"></div>
+</section>
+
+<!-- ======== PAGE: FLOWCHART ======== -->
+<section class="page" id="page-flowchart">
+  <h1 class="page-title">⚙️ Alur Sistem Aplikasi</h1>
+  <p class="page-sub">Bagaimana sistem "Dengar Suaraku" bekerja dari awal hingga akhir.</p>
+
+  <div class="flowchart-wrap">
+    <div class="fc">
+
+      <!-- START -->
+      <div class="fc-node fc-start">🚀 Pengguna Membuka Aplikasi</div>
+      <div class="fc-arrow">↓</div>
+
+      <!-- AUTH -->
+      <div class="fc-node fc-action">🔐 Login / Daftar Akun (Data terenkripsi)</div>
+      <div class="fc-arrow">↓</div>
+
+      <!-- PROFILE -->
+      <div class="fc-node fc-decide" style="border-radius:6px;">❓ Sudah mengisi profil disabilitas?</div>
+      <div class="fc-row" style="gap:40px;margin:0;">
+        <div class="fc" style="align-items:flex-end;">
+          <div class="fc-arrow">↙ Belum</div>
+          <div class="fc-node fc-action">📝 Isi Profil & Jenis Disabilitas</div>
+          <div class="fc-arrow">↓</div>
+        </div>
+        <div class="fc">
+          <div class="fc-arrow">Ya ↘</div>
+          <div style="height:66px;"></div>
+        </div>
+      </div>
+
+      <!-- DASHBOARD -->
+      <div class="fc-node fc-action" style="min-width:200px;">🏠 Dashboard Personalisasi</div>
+      <div class="fc-arrow">↓</div>
+
+      <!-- MENU BRANCH -->
+      <div style="font-size:12px;font-weight:700;color:var(--ink-soft);margin-bottom:4px;">Pilih Fitur</div>
+      <div class="fc-row" style="gap:12px;align-items:flex-start;">
+        <div class="fc">
+          <div class="fc-node fc-action" style="min-width:110px;">🎓<br>Beasiswa</div>
+          <div class="fc-arrow">↓</div>
+          <div class="fc-node fc-output" style="min-width:110px;">Cari & Filter Peluang Inklusif</div>
+          <div class="fc-arrow">↓</div>
+          <div class="fc-node fc-output" style="min-width:110px;">Ajukan / Simpan Favorit</div>
+        </div>
+        <div class="fc">
+          <div class="fc-node fc-action" style="min-width:110px;">💬<br>Forum</div>
+          <div class="fc-arrow">↓</div>
+          <div class="fc-node fc-output" style="min-width:110px;">Input Suara → Teks (STT)</div>
+          <div class="fc-arrow">↓</div>
+          <div class="fc-node fc-output" style="min-width:110px;">Kirim & Baca (TTS)</div>
+        </div>
+        <div class="fc">
+          <div class="fc-node fc-action" style="min-width:110px;">🗺️<br>Peta</div>
+          <div class="fc-arrow">↓</div>
+          <div class="fc-node fc-output" style="min-width:110px;">Lihat Status Fasilitas</div>
+          <div class="fc-arrow">↓</div>
+          <div class="fc-node fc-output" style="min-width:110px;">Lapor → Database KMH</div>
+        </div>
+        <div class="fc">
+          <div class="fc-node fc-action" style="min-width:110px;">🤝<br>Buddy</div>
+          <div class="fc-arrow">↓</div>
+          <div class="fc-node fc-output" style="min-width:110px;">Algoritma Pencocokan</div>
+          <div class="fc-arrow">↓</div>
+          <div class="fc-node fc-output" style="min-width:110px;">Sesi Mentoring Terjadwal</div>
+        </div>
+      </div>
+
+      <div class="fc-arrow" style="margin-top:8px;">↓</div>
+      <div class="fc-node fc-action" style="min-width:200px;">📊 Data → Admin KMH & Kampus</div>
+      <div class="fc-arrow">↓</div>
+      <div class="fc-node fc-end">✅ Advokasi & Pemberdayaan Terwujud</div>
+
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <div class="section-header"><h2>👤 User yang Terlibat</h2></div>
+  <div class="grid-2">
+    <div class="card">
+      <div style="font-size:24px;margin-bottom:8px;">🧑‍🦯</div>
+      <h3 style="font-weight:800;margin-bottom:6px;">Mahasiswa Disabilitas / Anggota KMH</h3>
+      <p style="font-size:13px;color:var(--ink-soft);">Pengguna utama. Mengakses beasiswa, forum, peta, dan mentoring. Memiliki hak atas data pribadinya.</p>
+    </div>
+    <div class="card">
+      <div style="font-size:24px;margin-bottom:8px;">👨‍💼</div>
+      <h3 style="font-weight:800;margin-bottom:6px;">Pengurus KMH (Admin)</h3>
+      <p style="font-size:13px;color:var(--ink-soft);">Mengelola konten, menyaring laporan, menjembatani aspirasi anggota ke pihak kampus.</p>
+    </div>
+    <div class="card">
+      <div style="font-size:24px;margin-bottom:8px;">🏫</div>
+      <h3 style="font-weight:800;margin-bottom:6px;">Pihak Kampus (Dosen / Biro)</h3>
+      <p style="font-size:13px;color:var(--ink-soft);">Memantau laporan aksesibilitas dan memberikan respons kebijakan berdasarkan data dari aplikasi.</p>
+    </div>
+    <div class="card">
+      <div style="font-size:24px;margin-bottom:8px;">🏢</div>
+      <h3 style="font-weight:800;margin-bottom:6px;">Mitra Eksternal</h3>
+      <p style="font-size:13px;color:var(--ink-soft);">Penyedia beasiswa, perusahaan, dan LSM yang memasukkan informasi lowongan inklusif ke platform.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======== PAGE: PRIVASI ======== -->
+<section class="page" id="page-privasi">
+  <h1 class="page-title">🔒 Privasi & Perlindungan Data</h1>
+  <p class="page-sub">Kami berkomitmen melindungi data pribadi kamu sesuai Undang-Undang No. 27 Tahun 2022 tentang Perlindungan Data Pribadi (UU PDP).</p>
+
+  <div class="card privacy-article">
+    <h2>1. Prinsip Dasar Perlindungan Data</h2>
+    <p>Platform "Dengar Suaraku" mengumpulkan dan memproses data pribadi berdasarkan prinsip-prinsip yang diamanatkan UU PDP, yaitu: legalitas, pembatasan tujuan, minimalisasi data, akurasi, pembatasan penyimpanan, integritas, kerahasiaan, dan akuntabilitas.</p>
+    <div class="law-cite">
+      <strong>Pasal 16 UU PDP No. 27/2022:</strong> "Pemrosesan Data Pribadi harus didasarkan pada dasar pemrosesan yang sah, termasuk persetujuan eksplisit dari Subjek Data."
+    </div>
+
+    <h2>2. Data yang Dikumpulkan</h2>
+    <p>Kami hanya mengumpulkan data yang benar-benar diperlukan untuk layanan:</p>
+    <ul>
+      <li><strong>Data Identitas:</strong> Nama, email, nomor mahasiswa (untuk verifikasi)</li>
+      <li><strong>Data Disabilitas:</strong> Jenis disabilitas (opsional, hanya untuk pencocokan mentor & aksesibilitas)</li>
+      <li><strong>Data Aktivitas:</strong> Postingan forum, laporan aksesibilitas, pencarian beasiswa</li>
+      <li><strong>Data Suara:</strong> Rekaman suara untuk fitur Speech-to-Text — <em>tidak disimpan permanen, langsung dikonversi</em></li>
+    </ul>
+    <div class="law-cite">
+      <strong>Pasal 20 UU PDP:</strong> "Pengumpulan Data Pribadi dilakukan secara terbatas dan spesifik, sah secara hukum, patut, dan transparan."
+    </div>
+
+    <h2>3. Data Sensitif: Disabilitas</h2>
+    <p>Data jenis disabilitas termasuk dalam kategori <strong>data pribadi sensitif</strong> yang mendapatkan perlindungan lebih ketat. Data ini tidak pernah dibagikan kepada pihak ketiga tanpa persetujuan eksplisit. Akses terbatas hanya untuk fitur pencocokan mentor dan rekomendasi beasiswa.</p>
+    <div class="law-cite">
+      <strong>Pasal 4 ayat (2) UU PDP:</strong> "Data Pribadi yang bersifat spesifik meliputi data kesehatan, data biometrik, data disabilitas, dan lainnya yang wajib mendapatkan perlindungan lebih ketat."
+    </div>
+
+    <h2>4. Hak-Hak Subjek Data (Anggota KMH)</h2>
+    <p>Setiap anggota KMH sebagai subjek data memiliki hak penuh atas datanya, sesuai Bab V UU PDP:</p>
+    <ul>
+      <li>✅ Hak untuk mendapatkan informasi tentang data yang dikumpulkan</li>
+      <li>✅ Hak untuk mengakses dan menyalin data pribadinya</li>
+      <li>✅ Hak untuk memperbaiki data yang tidak akurat</li>
+      <li>✅ Hak untuk menghapus data (right to be forgotten)</li>
+      <li>✅ Hak untuk menarik kembali persetujuan kapan saja</li>
+      <li>✅ Hak untuk menolak pemrosesan data untuk keperluan tertentu</li>
+    </ul>
+    <div class="law-cite">
+      <strong>Pasal 67-71 UU PDP:</strong> Mengatur hak subjek data secara menyeluruh, termasuk hak penarikan persetujuan dan hak penghapusan data.
+    </div>
+
+    <h2>5. Keamanan Teknis Data</h2>
+    <ul>
+      <li>🔐 Enkripsi end-to-end untuk semua data yang ditransmisikan</li>
+      <li>🔐 Data tersimpan di server terenkripsi (AES-256)</li>
+      <li>🔐 Two-factor authentication untuk akun admin</li>
+      <li>🔐 Audit log akses data secara berkala</li>
+      <li>🔐 Data suara diproses secara lokal dan tidak diunggah ke server</li>
+    </ul>
+
+    <h2>6. Tanggung Jawab Pengelola (KMH sebagai Pengendali Data)</h2>
+    <p>KMH bertindak sebagai <strong>Pengendali Data Pribadi</strong> yang wajib menerapkan langkah teknis dan operasional untuk menjamin keamanan data, serta melaporkan kebocoran data dalam waktu 14 hari sesuai ketentuan UU PDP.</p>
+    <div class="law-cite">
+      <strong>Pasal 35-43 UU PDP:</strong> Kewajiban Pengendali Data termasuk perlindungan teknis, organisasional, dan pelaporan insiden keamanan data.
+    </div>
+
+    <h2>7. Kontak & Pengaduan</h2>
+    <p>Untuk pertanyaan privasi atau pengaduan terkait data pribadi, hubungi tim KMH di: <strong>privasi@komunitasmatahati.org</strong> atau kunjungi sekretariat di Jl. Rungkut Asri XIII No. 16, Surabaya.</p>
+  </div>
+</section>
+
+</main>
+
+<!-- Modal -->
+<div class="modal-overlay" id="match-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('match-modal')" aria-label="Tutup">✕</button>
+    <h2>🔍 Pencocokan Mentor</h2>
+    <p>Isi preferensi kamu agar kami dapat mencarikan mentor yang paling sesuai.</p>
+    <div class="form-group">
+      <label class="form-group label" style="font-size:12px;font-weight:700;color:var(--ink-soft);display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em;">Jenis Disabilitas</label>
+      <select class="form-control" id="match-disability">
+        <option>Tunanetra</option>
+        <option>Tunarungu / Wicara</option>
+        <option>Daksa (Fisik)</option>
+        <option>Tunagrahita</option>
+        <option>Lainnya</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label style="font-size:12px;font-weight:700;color:var(--ink-soft);display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em;">Kebutuhan Utama</label>
+      <select class="form-control">
+        <option>Bimbingan Akademik</option>
+        <option>Adaptasi Kampus</option>
+        <option>Informasi Beasiswa</option>
+        <option>Dukungan Sosial-Emosional</option>
+      </select>
+    </div>
+    <button class="btn btn-primary" style="width:100%;" onclick="runMatching()">🤝 Carikan Mentor</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="pin-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('pin-modal')" aria-label="Tutup">✕</button>
+    <h2 id="pin-modal-title">Gedung A</h2>
+    <p id="pin-modal-body">Info aksesibilitas...</p>
+    <button class="btn btn-primary btn-sm" onclick="closeModal('pin-modal');showPage('peta',null);setTimeout(()=>document.querySelector('.report-form').scrollIntoView({behavior:'smooth'}),300)">📍 Laporkan Masalah</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+// ===== DATA =====
+const scholarships = [
+  { id:1, title:"Beasiswa Yayasan Difabel Mandiri", type:"beasiswa", deadline:"30 Jul 2025", disabilitas:"Semua Jenis", desc:"Beasiswa penuh S1 untuk mahasiswa disabilitas berprestasi. Inklusif dan aksesibel.", badge:"badge-purple" },
+  { id:2, title:"Magang Inklusif PT Telkom Indonesia", type:"magang", deadline:"15 Agu 2025", disabilitas:"Semua Jenis", desc:"Program magang 3 bulan di lingkungan kerja yang sepenuhnya inklusif dengan fasilitas lengkap.", badge:"badge-green" },
+  { id:3, title:"Beasiswa Bakti BCA Difabel", type:"beasiswa", deadline:"1 Sep 2025", disabilitas:"Tunanetra, Daksa", desc:"Beasiswa uang kuliah + living cost untuk tunanetra dan daksa. Dilengkapi mentoring karir.", badge:"badge-purple" },
+  { id:4, title:"Pelatihan Coding Aksesibel – KMH x PELIT", type:"pelatihan", deadline:"Sepanjang tahun", disabilitas:"Tunanetra", desc:"Pelatihan IT (Python, Web) khusus tunanetra bersama komunitas. Gratis dan tersertifikat.", badge:"badge-amber" },
+  { id:5, title:"Lowongan Staff Komunikasi – KMH", type:"kerja", deadline:"31 Jul 2025", disabilitas:"Semua Jenis", desc:"Lowongan internal KMH. Bekerja di lingkungan yang penuh dengan semangat inklusivitas.", badge:"badge-green" },
+  { id:6, title:"Beasiswa LPDP Afirmasi Difabel", type:"beasiswa", deadline:"15 Okt 2025", disabilitas:"Semua Jenis", desc:"Beasiswa pemerintah RI untuk S2 luar negeri. Jalur afirmasi khusus penyandang disabilitas.", badge:"badge-purple" },
+  { id:7, title:"Pelatihan Pijat Terapeutik – KMH TEPI", type:"pelatihan", deadline:"Sepanjang tahun", disabilitas:"Semua Jenis", desc:"Program pelatihan pijat terapi bersama KMH. Bangun kemandirian ekonomi dari keahlian nyata.", badge:"badge-amber" },
+  { id:8, title:"Magang Desainer UI/UX Inklusif", type:"magang", deadline:"10 Agu 2025", disabilitas:"Semua Jenis", desc:"Perusahaan startup yang berkomitmen inklusif. Kerja remote, fleksibel, dan aksesibel penuh.", badge:"badge-green" },
+];
+
+const forumPosts = [
+  { id:1, author:"Dani H.", avatar:"DH", color:"#6C47FF", title:"Tips Menggunakan Screen Reader di Kampus", body:"Buat teman-teman tunanetra, saya punya beberapa tips TalkBack yang sangat membantu saat kuliah daring. Yuk diskusi bersama!", tag:"badge-purple", tagLabel:"Tips & Trik", voice:true },
+  { id:2, author:"Ika R.", avatar:"IR", color:"#00BFA5", title:"Bagikan Pengalaman Beasiswa LPDP Afirmasi", body:"Saya berhasil lolos LPDP jalur difabel tahun lalu! AMA (Ask Me Anything) – tanya saya apa saja soal prosesnya.", tag:"badge-green", tagLabel:"Beasiswa", voice:false },
+  { id:3, author:"Prana A.", avatar:"PA", color:"#FF5C7A", title:"Lift Rektorat Rusak Sudah 3 Minggu!", body:"Mohon perhatian pengurus KMH dan pihak kampus. Lift Gedung Rektorat masih rusak, sangat menyulitkan teman daksa.", tag:"badge-rose", tagLabel:"Advokasi", voice:true },
+  { id:4, author:"Aswar F.", avatar:"AF", color:"#FFB830", title:"Cerita Ikut Open House Wisma Jerman", body:"KMH tampil di Wisma Jerman minggu lalu, keren banget! Saya bangga jadi bagian dari komunitas ini.", tag:"badge-amber", tagLabel:"Cerita", voice:false },
+];
+
+const buddies = [
+  { name:"Dani Heru, S.Pd., M.K.P.", role:"Ketua KMH / Gitaris", specialty:["Tunanetra","Akademik","Karir Musik"], avail:"avail-green", availLabel:"Tersedia", avatar:"DH", color:"#6C47FF" },
+  { name:"Dian Ika Riani, S.E., Ak.", role:"Co-Founder & Relawan Senior", specialty:["Semua Disabilitas","Keuangan","UMKM"], avail:"avail-green", availLabel:"Tersedia", avatar:"DI", color:"#00BFA5" },
+  { name:"Prana Carenza, M.Pd.", role:"Koordinator Sekretariat", specialty:["Tunanetra","Akademik","Administratif"], avail:"avail-green", availLabel:"Tersedia", avatar:"PC", color:"#FF5C7A" },
+  { name:"Relawan Mahasiswa – Untag", role:"Mahasiswa Ilmu Komunikasi", specialty:["Penulisan","Media Sosial","Konten"], avail:"avail-amber", availLabel:"Sibuk Sementara", avatar:"RM", color:"#FFB830" },
+  { name:"Titis Catur Ningrum", role:"Bendahara KMH", specialty:["Beasiswa","Keuangan","Administrasi"], avail:"avail-green", availLabel:"Tersedia", avatar:"TC", color:"#9C27B0" },
+  { name:"Joko Winarko", role:"Koordinator Humas & Medsos", specialty:["Komunikasi","Advokasi","Media"], avail:"avail-green", availLabel:"Tersedia", avatar:"JW", color:"#E91E63" },
+];
+
+// ===== CURRENT STATE =====
+let currentFilter = 'all';
+let recording = false;
+let recognition = null;
+let fontSize = 15;
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', () => {
+  renderScholarships();
+  renderForum();
+  renderBuddy();
+});
+
+// ===== NAVIGATION =====
+function showPage(id, link) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  if (link) link.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ===== RENDER SCHOLARSHIPS =====
+function renderScholarships(filter, search) {
+  filter = filter || currentFilter;
+  search = search || document.getElementById('scholarship-search').value.toLowerCase();
+  const container = document.getElementById('scholarship-list');
+  let items = scholarships;
+  if (filter !== 'all') items = items.filter(s => s.type === filter);
+  if (search) items = items.filter(s => s.title.toLowerCase().includes(search) || s.desc.toLowerCase().includes(search));
+  container.innerHTML = items.map(s => `
+    <div class="card scholarship-card">
+      <div class="meta">
+        <span class="badge ${s.badge}">${s.type.toUpperCase()}</span>
+        <span class="badge badge-purple" style="background:var(--leaf-lt);color:#00695C;">${s.disabilitas}</span>
+      </div>
+      <h3>${s.title}</h3>
+      <p class="desc">${s.desc}</p>
+      <div class="meta"><span class="deadline">⏰ Deadline: ${s.deadline}</span></div>
+      <div class="actions">
+        <button class="btn btn-primary btn-sm" onclick="toast('✅ Berhasil disimpan ke Favorit!')">💾 Simpan</button>
+        <button class="btn btn-outline btn-sm" onclick="toast('📤 Membuka tautan pendaftaran...')">Daftar →</button>
+        <button class="btn btn-sm" style="color:var(--leaf);" onclick="speakContent('${s.title}. ${s.desc}. Deadline: ${s.deadline}')">🔊</button>
+      </div>
+    </div>
+  `).join('');
+  if (!items.length) container.innerHTML = '<p style="color:var(--ink-soft);grid-column:1/-1;text-align:center;padding:40px;">Tidak ada hasil yang cocok.</p>';
+}
+
+function setFilter(el, type) {
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  currentFilter = type;
+  renderScholarships(type);
+}
+
+function filterScholarships() { renderScholarships(); }
+
+// ===== RENDER FORUM =====
+function renderForum() {
+  const container = document.getElementById('forum-posts');
+  container.innerHTML = forumPosts.map(p => `
+    <div class="card forum-post">
+      <div class="forum-meta">
+        <div class="avatar" style="background:${p.color};">${p.avatar}</div>
+        <strong style="font-size:13px;">${p.author}</strong>
+        <span class="badge ${p.tag}">${p.tagLabel}</span>
+        ${p.voice ? '<span style="color:var(--leaf);font-size:11px;font-weight:700;">🎙️ Via Suara</span>' : ''}
+      </div>
+      <h3>${p.title}</h3>
+      <p class="body">${p.body}</p>
+      <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;">
+        <button class="btn btn-outline btn-sm" onclick="toast('💬 Membuka thread diskusi...')">Balas</button>
+        <button class="btn btn-sm" style="color:var(--leaf);" onclick="speakContent('${p.title}. ${p.body}')">🔊 Dengarkan</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ===== RENDER BUDDY =====
+function renderBuddy() {
+  const container = document.getElementById('buddy-list');
+  container.innerHTML = buddies.map(b => `
+    <div class="card">
+      <div class="buddy-card">
+        <div class="avatar" style="background:${b.color};width:48px;height:48px;font-size:16px;">${b.avatar}</div>
+        <div class="buddy-info" style="flex:1;">
+          <h3>${b.name}</h3>
+          <p>${b.role}</p>
+          <div class="buddy-tags">
+            ${b.specialty.map(s => `<span class="buddy-tag">${s}</span>`).join('')}
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+          <div class="availability ${b.avail}"></div>
+          <span style="font-size:10px;color:var(--ink-soft);white-space:nowrap;">${b.availLabel}</span>
+        </div>
+      </div>
+      <div style="margin-top:12px;display:flex;gap:8px;">
+        <button class="btn btn-primary btn-sm" onclick="toast('📅 Permintaan sesi mentoring dikirim ke ${b.name}!')">Minta Sesi</button>
+        <button class="btn btn-outline btn-sm" onclick="toast('💬 Membuka chat dengan ${b.name}...')">Kirim Pesan</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ===== VOICE RECORDING =====
+function toggleRecording() {
+  const btn = document.getElementById('voice-btn');
+  const status = document.getElementById('voice-status');
+
+  if (!recording) {
+    if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SR();
+      recognition.lang = 'id-ID';
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.onresult = (e) => {
+        const text = e.results[0][0].transcript;
+        const existing = document.getElementById('post-body').value;
+        document.getElementById('post-body').value = existing ? existing + ' ' + text : text;
+        toast('🎙️ Suara berhasil diubah menjadi teks!');
+      };
+      recognition.onerror = () => toast('⚠️ Tidak dapat mengakses mikrofon. Pastikan izin browser diberikan.');
+      recognition.onend = () => stopRecording();
+      recognition.start();
+      recording = true;
+      btn.classList.add('recording');
+      btn.innerHTML = '⏹️';
+      status.textContent = 'Sedang merekam... Bicara sekarang!';
+    } else {
+      // Fallback simulation
+      recording = true;
+      btn.classList.add('recording');
+      btn.innerHTML = '⏹️';
+      status.textContent = 'Sedang merekam... (Simulasi — klik lagi untuk berhenti)';
+      setTimeout(() => {
+        if (recording) {
+          document.getElementById('post-body').value = (document.getElementById('post-body').value + ' Ini adalah teks hasil simulasi Speech-to-Text untuk demonstrasi prototipe.').trim();
+          stopRecording();
+          toast('🎙️ Teks berhasil ditambahkan (mode simulasi)!');
+        }
+      }, 3000);
+    }
+  } else {
+    if (recognition) recognition.stop();
+    else stopRecording();
+  }
+}
+
+function stopRecording() {
+  recording = false;
+  const btn = document.getElementById('voice-btn');
+  const status = document.getElementById('voice-status');
+  btn.classList.remove('recording');
+  btn.innerHTML = '🎙️';
+  status.textContent = 'Klik mikrofon untuk mulai merekam. Suara kamu akan diubah menjadi teks otomatis.';
+}
+
+// ===== SUBMIT POST =====
+function submitPost() {
+  const title = document.getElementById('post-title').value.trim();
+  const body = document.getElementById('post-body').value.trim();
+  if (!title || !body) { toast('⚠️ Mohon isi judul dan isi postingan!'); return; }
+
+  const isTTS = document.getElementById('tts-toggle').checked;
+  if (isTTS) speakContent(title + '. ' + body);
+
+  forumPosts.unshift({ id: Date.now(), author:"Kamu", avatar:"KM", color:"#6C47FF", title, body, tag:"badge-purple", tagLabel:"Diskusi", voice: recording });
+  renderForum();
+  document.getElementById('post-title').value = '';
+  document.getElementById('post-body').value = '';
+  toast('✅ Postingan berhasil dikirim!');
+}
+
+// ===== TEXT TO SPEECH =====
+function speakText(elementId) {
+  const text = document.getElementById(elementId).value;
+  if (!text) { toast('⚠️ Tidak ada teks untuk dibacakan.'); return; }
+  speakContent(text);
+}
+
+function speakContent(text) {
+  if (!('speechSynthesis' in window)) { toast('⚠️ Browser tidak mendukung Text-to-Speech.'); return; }
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'id-ID';
+  utt.rate = 0.9;
+  window.speechSynthesis.speak(utt);
+  toast('🔊 Membacakan teks...');
+}
+
+function readPage() {
+  const activePage = document.querySelector('.page.active');
+  const text = activePage ? activePage.innerText.substring(0, 600) : 'Tidak ada konten.';
+  speakContent(text);
+}
+
+// ===== REPORT =====
+function submitReport() {
+  const loc = document.getElementById('report-loc').value;
+  const type = document.getElementById('report-type').value;
+  const desc = document.getElementById('report-desc').value.trim();
+  if (!desc) { toast('⚠️ Mohon isi deskripsi masalah!'); return; }
+  document.getElementById('report-desc').value = '';
+  toast(`✅ Laporan "${type}" di ${loc} berhasil dikirim ke admin KMH!`);
+}
+
+// ===== MAP PINS =====
+function showPinInfo(loc, info, status) {
+  document.getElementById('pin-modal-title').textContent = '📍 ' + loc;
+  document.getElementById('pin-modal-body').textContent = info;
+  document.getElementById('pin-modal').classList.add('open');
+}
+
+// ===== BUDDY MATCHING =====
+function openMatchModal() { document.getElementById('match-modal').classList.add('open'); }
+
+function runMatching() {
+  const disability = document.getElementById('match-disability').value;
+  closeModal('match-modal');
+  setTimeout(() => toast(`🎉 Kami menemukan 3 mentor sesuai untuk "${disability}"! Cek daftar di bawah.`), 300);
+}
+
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// ===== ACCESSIBILITY =====
+function toggleContrast() {
+  document.body.classList.toggle('high-contrast');
+  const btn = document.getElementById('btn-contrast');
+  const isActive = document.body.classList.contains('high-contrast');
+  btn.classList.toggle('active', isActive);
+  btn.setAttribute('aria-pressed', isActive);
+  toast(isActive ? '♿ Mode Kontras Tinggi: Aktif' : '♿ Mode Kontras Tinggi: Nonaktif');
+}
+
+function changeFontSize(delta) {
+  fontSize = Math.max(12, Math.min(22, fontSize + delta));
+  document.body.style.fontSize = fontSize + 'px';
+  document.getElementById('font-size-display').textContent = fontSize;
+}
+
+// ===== TOAST =====
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+// Close modal on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('open'); });
+});
+</script>
+</body>
+</html>
