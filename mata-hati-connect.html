@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mata Hati Connect — Platform Komunitas &amp; Pemberdayaan Digital Inklusif KMH Surabaya</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Atkinson+Hyperlegible:wght@400;700&display=swap');
+
+  :root{
+    --bg:#FBF6EF;
+    --bg-deep:#16323F;
+    --bg-card:#FFFFFF;
+    --ink:#22282B;
+    --ink-soft:#5E6A6E;
+    --primary:#1F4959;
+    --primary-dark:#122F39;
+    --accent:#E8A33D;
+    --accent-2:#D9694F;
+    --border:#E3D9C9;
+    --focus:#1F4959;
+    --radius:14px;
+    --font-display:'Fraunces', serif;
+    --font-body:'Atkinson Hyperlegible', sans-serif;
+    --shadow: 0 4px 18px rgba(22,50,63,0.08);
+  }
+
+  html.contrast-high{
+    --bg:#000000;
+    --bg-deep:#000000;
+    --bg-card:#0B0B0B;
+    --ink:#FFFFFF;
+    --ink-soft:#FFE9A8;
+    --primary:#FFD43B;
+    --primary-dark:#FFD43B;
+    --accent:#FFD43B;
+    --accent-2:#7FE3C3;
+    --border:#FFFFFF;
+    --focus:#FFD43B;
+    --shadow: none;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ -webkit-text-size-adjust:100%; scroll-behavior:smooth; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font-body);
+    line-height:1.6;
+    transition:background .2s, color .2s;
+  }
+  html.contrast-high img, html.contrast-high svg .accent-fill{ filter:none; }
+
+  h1,h2,h3,h4{ font-family:var(--font-display); color:var(--ink); margin:0 0 .4em; line-height:1.15; }
+  h1{ font-weight:700; }
+  h2{ font-weight:600; font-size:1.7rem; }
+  h3{ font-weight:600; font-size:1.2rem; }
+  p{ margin:0 0 1em; color:var(--ink-soft); }
+  html.contrast-high p{ color:var(--ink); }
+  a{ color:var(--primary); }
+  html.contrast-high a{ color:var(--accent); text-decoration:underline; }
+
+  /* Skip link */
+  .skip-link{
+    position:absolute; left:-999px; top:0;
+    background:var(--accent); color:var(--primary-dark);
+    padding:.6em 1em; font-weight:700; z-index:200; border-radius:0 0 8px 0;
+  }
+  .skip-link:focus{ left:0; }
+
+  /* Focus visibility */
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible{
+    outline:3px solid var(--focus); outline-offset:2px; border-radius:6px;
+  }
+
+  /* ===== Topbar ===== */
+  .topbar{
+    background:var(--bg-deep); color:#fff;
+    padding:.9rem 1.2rem;
+    display:flex; flex-wrap:wrap; align-items:center; gap:1rem;
+    justify-content:space-between;
+    position:sticky; top:0; z-index:100;
+  }
+  .brand{ display:flex; align-items:center; gap:.6rem; }
+  .brand h1{ color:#fff; font-size:1.25rem; margin:0; }
+  .brand small{ display:block; color:#CFE3E9; font-size:.72rem; font-family:var(--font-body); font-weight:400; }
+  html.contrast-high .brand small{ color:var(--accent); }
+
+  .a11y-toolbar{ display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; }
+  .a11y-toolbar button{
+    background:rgba(255,255,255,.08); color:#fff; border:1px solid rgba(255,255,255,.35);
+    border-radius:999px; padding:.4em .9em; font-family:var(--font-body); font-size:.85rem;
+    cursor:pointer; font-weight:700; display:flex; align-items:center; gap:.35em;
+    transition:background .15s;
+  }
+  .a11y-toolbar button:hover{ background:rgba(255,255,255,.2); }
+  .a11y-toolbar button[aria-pressed="true"]{ background:var(--accent); color:var(--primary-dark); border-color:var(--accent); }
+  html.contrast-high .a11y-toolbar button{ border-color:#fff; }
+  html.contrast-high .a11y-toolbar button[aria-pressed="true"]{ background:var(--accent); color:#000; }
+
+  /* ===== Tabs ===== */
+  .tabs{
+    display:flex; flex-wrap:wrap; gap:.4rem; padding:.7rem 1.2rem;
+    background:var(--bg-card); border-bottom:1px solid var(--border);
+    position:sticky; top:60px; z-index:90;
+  }
+  .tabs button{
+    border:1px solid var(--border); background:transparent; color:var(--ink);
+    padding:.55em 1.1em; border-radius:999px; font-family:var(--font-body); font-weight:700;
+    font-size:.92rem; cursor:pointer; transition:all .15s;
+  }
+  .tabs button:hover{ border-color:var(--primary); }
+  .tabs button[aria-selected="true"]{ background:var(--primary); color:#fff; border-color:var(--primary); }
+  html.contrast-high .tabs{ border-bottom:2px solid var(--border); }
+  html.contrast-high .tabs button[aria-selected="true"]{ background:var(--accent); color:#000; }
+
+  /* ===== Layout ===== */
+  main{ max-width:1080px; margin:0 auto; padding:1.6rem 1.2rem 4rem; }
+  .panel{ display:none; animation:fadein .35s ease; }
+  .panel.active{ display:block; }
+  @keyframes fadein{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+  @media (prefers-reduced-motion: reduce){ .panel{ animation:none; } }
+
+  .eyebrow{
+    display:inline-block; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+    font-size:.78rem; color:var(--accent-2); background:rgba(217,105,79,.1);
+    padding:.3em .8em; border-radius:999px; margin-bottom:.6rem;
+  }
+  html.contrast-high .eyebrow{ background:transparent; border:1px solid var(--accent); color:var(--accent); }
+
+  /* ===== Hero ===== */
+  .hero{
+    background:linear-gradient(135deg, var(--bg-deep), var(--primary));
+    color:#fff; border-radius:20px; padding:2.4rem; margin-bottom:2rem;
+    display:grid; grid-template-columns:1.4fr 1fr; gap:2rem; align-items:center;
+  }
+  html.contrast-high .hero{ background:#000; border:2px solid var(--accent); }
+  .hero h1{ color:#fff; font-size:2.1rem; margin-bottom:.5rem; }
+  .hero p{ color:#E4EEF1; }
+  html.contrast-high .hero p{ color:#fff; }
+  .hero-quote{
+    border-left:4px solid var(--accent); padding-left:1rem; font-style:italic;
+    font-family:var(--font-display); font-size:1.05rem; color:#fff;
+  }
+  .hero-stats{ display:flex; flex-direction:column; gap:1rem; }
+  .stat-box{
+    background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.2);
+    border-radius:var(--radius); padding:1rem 1.2rem;
+  }
+  .stat-box .num{ font-family:var(--font-display); font-size:2rem; font-weight:700; color:var(--accent); }
+  .stat-box .lbl{ font-size:.85rem; color:#E4EEF1; }
+  html.contrast-high .stat-box .lbl{ color:#fff; }
+  @media (max-width:760px){ .hero{ grid-template-columns:1fr; } }
+
+  /* ===== Cards & Grid ===== */
+  .grid{ display:grid; gap:1.1rem; }
+  .grid-2{ grid-template-columns:repeat(2,1fr); }
+  .grid-3{ grid-template-columns:repeat(3,1fr); }
+  @media (max-width:760px){ .grid-2, .grid-3{ grid-template-columns:1fr; } }
+
+  .card{
+    background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius);
+    padding:1.3rem; box-shadow:var(--shadow);
+  }
+  html.contrast-high .card{ border:2px solid var(--border); }
+  .card h3{ margin-bottom:.3rem; }
+  .tag{
+    display:inline-block; font-size:.75rem; font-weight:700; padding:.2em .7em;
+    border-radius:999px; background:var(--bg); border:1px solid var(--border); color:var(--ink-soft);
+    margin:.15em .2em .15em 0;
+  }
+  html.contrast-high .tag{ color:var(--ink); border-color:var(--accent); }
+
+  /* ===== Buttons ===== */
+  .btn{
+    display:inline-flex; align-items:center; gap:.5em; font-family:var(--font-body); font-weight:700;
+    font-size:.95rem; padding:.65em 1.3em; border-radius:999px; border:2px solid var(--primary);
+    background:var(--primary); color:#fff; cursor:pointer; transition:transform .1s, opacity .15s;
+  }
+  .btn:hover{ opacity:.9; }
+  .btn:active{ transform:scale(.98); }
+  .btn-outline{ background:transparent; color:var(--primary); }
+  .btn-accent{ background:var(--accent); border-color:var(--accent); color:var(--primary-dark); }
+  .btn-sm{ padding:.4em .9em; font-size:.82rem; }
+  .btn[disabled]{ opacity:.5; cursor:not-allowed; }
+  html.contrast-high .btn{ border-width:2px; }
+  html.contrast-high .btn-outline{ color:var(--accent); border-color:var(--accent); }
+
+  /* ===== Forms ===== */
+  label{ display:block; font-weight:700; margin-bottom:.3em; font-size:.92rem; }
+  input, select, textarea{
+    width:100%; font-family:var(--font-body); font-size:1rem; padding:.65em .8em;
+    border:1.5px solid var(--border); border-radius:8px; background:var(--bg-card); color:var(--ink);
+    margin-bottom:1rem;
+  }
+  html.contrast-high input, html.contrast-high select, html.contrast-high textarea{ border:2px solid var(--accent); }
+  .field-hint{ font-size:.8rem; color:var(--ink-soft); margin-top:-.7rem; margin-bottom:1rem; }
+  .checkbox-row{ display:flex; gap:.6em; align-items:flex-start; margin-bottom:1.1rem; }
+  .checkbox-row input{ width:auto; margin:.2em 0 0; }
+  .checkbox-row label{ font-weight:400; font-size:.9rem; }
+  .input-with-btn{ display:flex; gap:.5em; }
+  .input-with-btn input{ flex:1; }
+
+  /* ===== Toast ===== */
+  #toast{
+    position:fixed; bottom:1.2rem; left:50%; transform:translateX(-50%) translateY(20px);
+    background:var(--primary-dark); color:#fff; padding:.8em 1.4em; border-radius:999px;
+    font-weight:700; box-shadow:var(--shadow); opacity:0; transition:all .25s; z-index:300;
+    max-width:90vw; text-align:center;
+  }
+  #toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+  html.contrast-high #toast{ background:var(--accent); color:#000; border:2px solid #fff; }
+
+  /* ===== Listen button ===== */
+  .listen-btn{
+    background:var(--bg); border:1.5px solid var(--accent); color:var(--primary);
+    border-radius:999px; padding:.35em 1em; font-weight:700; font-size:.82rem;
+    cursor:pointer; display:inline-flex; align-items:center; gap:.4em;
+  }
+  .listen-btn:hover{ background:var(--accent); color:var(--primary-dark); }
+  html.contrast-high .listen-btn{ background:transparent; color:var(--accent); border-color:var(--accent); }
+
+  /* ===== Program sessions ===== */
+  .session{
+    border-top:1px solid var(--border); padding-top:.9rem; margin-top:.9rem;
+    display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:.8rem;
+  }
+  .session-info strong{ display:block; }
+  .session-info span{ font-size:.85rem; color:var(--ink-soft); }
+  html.contrast-high .session-info span{ color:var(--ink); }
+  .progress{ background:var(--bg); border:1px solid var(--border); border-radius:999px; height:10px; width:140px; overflow:hidden; }
+  .progress > div{ background:var(--accent); height:100%; }
+  .session-meta{ display:flex; align-items:center; gap:.6rem; }
+
+  /* ===== Marketplace ===== */
+  .product-icon{ font-size:2.2rem; }
+  .price{ font-weight:700; color:var(--primary); font-family:var(--font-display); font-size:1.15rem; }
+  html.contrast-high .price{ color:var(--accent); }
+
+  /* ===== Forum ===== */
+  .post{ border-bottom:1px solid var(--border); padding:1rem 0; }
+  .post:last-child{ border-bottom:none; }
+  .post-head{ display:flex; justify-content:space-between; align-items:baseline; gap:.6rem; flex-wrap:wrap; }
+  .post-head strong{ font-family:var(--font-display); }
+  .post-time{ font-size:.78rem; color:var(--ink-soft); }
+  html.contrast-high .post-time{ color:var(--ink); }
+
+  /* ===== Dashboard ===== */
+  .stat-grid .card{ text-align:center; }
+  .stat-grid .num{ font-family:var(--font-display); font-size:2.2rem; font-weight:700; color:var(--primary); }
+  html.contrast-high .stat-grid .num{ color:var(--accent); }
+  .stat-grid .lbl{ font-size:.85rem; color:var(--ink-soft); }
+  html.contrast-high .stat-grid .lbl{ color:var(--ink); }
+
+  .donut{
+    width:160px; height:160px; border-radius:50%; margin:0 auto 1rem;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .donut-center{
+    width:96px; height:96px; border-radius:50%; background:var(--bg-card);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    font-family:var(--font-display); font-weight:700;
+  }
+  .donut-center small{ font-family:var(--font-body); font-weight:400; font-size:.7rem; color:var(--ink-soft); }
+  html.contrast-high .donut-center{ background:#000; border:2px solid var(--accent); }
+  html.contrast-high .donut-center small{ color:var(--ink); }
+  .legend{ display:flex; flex-direction:column; gap:.4rem; font-size:.88rem; }
+  .legend-item{ display:flex; align-items:center; gap:.5em; }
+  .legend-dot{ width:12px; height:12px; border-radius:50%; flex:none; }
+
+  .bar-row{ display:grid; grid-template-columns:160px 1fr 60px; align-items:center; gap:.8rem; margin-bottom:.7rem; font-size:.9rem; }
+  .bar-track{ background:var(--bg); border:1px solid var(--border); border-radius:999px; height:14px; overflow:hidden; }
+  .bar-fill{ height:100%; background:linear-gradient(90deg, var(--accent), var(--accent-2)); }
+
+  /* ===== Flowchart ===== */
+  .flowchart{ display:flex; flex-wrap:wrap; gap:.6rem; align-items:center; justify-content:center; margin:1.4rem 0; }
+  .flow-step{
+    background:var(--bg-card); border:1.5px solid var(--primary); border-radius:12px;
+    padding:.8rem 1rem; font-size:.85rem; font-weight:700; text-align:center; min-width:120px;
+    color:var(--primary);
+  }
+  html.contrast-high .flow-step{ border-color:var(--accent); color:var(--accent); }
+  .flow-step .step-no{
+    display:block; font-family:var(--font-display); font-size:1.2rem; color:var(--accent); margin-bottom:.2rem;
+  }
+  .flow-arrow{ font-size:1.4rem; color:var(--accent-2); font-weight:700; }
+  @media (max-width:760px){ .flow-arrow{ transform:rotate(90deg); } }
+
+  /* ===== Misc ===== */
+  .section-intro{ max-width:680px; margin-bottom:1.4rem; }
+  .pill-row{ display:flex; gap:.5rem; flex-wrap:wrap; margin-bottom:1rem; }
+  table{ width:100%; border-collapse:collapse; font-size:.92rem; }
+  th, td{ text-align:left; padding:.6em .5em; border-bottom:1px solid var(--border); }
+  th{ font-family:var(--font-display); }
+  .status-badge{ font-size:.75rem; font-weight:700; padding:.2em .7em; border-radius:999px; }
+  .status-terverifikasi{ background:#E3F4E9; color:#1F7A4C; }
+  .status-menunggu{ background:#FCEFD9; color:#A56A1A; }
+  html.contrast-high .status-badge{ background:transparent; border:1px solid var(--accent); color:var(--accent); }
+
+  footer{ background:var(--bg-deep); color:#CFE3E9; padding:2rem 1.2rem; text-align:center; font-size:.88rem; }
+  footer strong{ color:#fff; }
+  html.contrast-high footer{ border-top:2px solid var(--accent); }
+
+  .privacy-box{ border-left:4px solid var(--accent-2); background:rgba(217,105,79,.06); padding:1rem 1.2rem; border-radius:0 var(--radius) var(--radius) 0; margin-bottom:1rem; }
+  html.contrast-high .privacy-box{ background:transparent; border-left:4px solid var(--accent); }
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Lompat ke konten utama</a>
+
+<header class="topbar">
+  <div class="brand">
+    <svg width="42" height="30" viewBox="0 0 100 60" aria-hidden="true">
+      <path d="M2 30 C 20 4, 80 4, 98 30 C 80 56, 20 56, 2 30 Z" fill="none" stroke="#FFFFFF" stroke-width="4"/>
+      <path d="M50 18 C 45 11, 34 11, 34 22 C 34 31, 50 43, 50 43 C 50 43, 66 31, 66 22 C 66 11, 55 11, 50 18 Z" fill="#E8A33D"/>
+    </svg>
+    <div>
+      <h1>Mata Hati Connect</h1>
+      <small>Platform Manajemen Komunitas &amp; Pemberdayaan Digital Inklusif — KMH Surabaya</small>
+    </div>
+  </div>
+  <div class="a11y-toolbar" role="group" aria-label="Pengaturan aksesibilitas">
+    <button id="btnFontDown" aria-label="Perkecil ukuran teks">A−</button>
+    <button id="btnFontReset" aria-label="Ukuran teks normal" aria-pressed="true">A</button>
+    <button id="btnFontUp" aria-label="Perbesar ukuran teks">A+</button>
+    <button id="btnContrast" aria-pressed="false" aria-label="Aktifkan mode kontras tinggi">◐ Kontras Tinggi</button>
+    <button id="btnAutoRead" aria-pressed="false" aria-label="Aktifkan baca otomatis tiap halaman">🔊 Baca Halaman</button>
+  </div>
+</header>
+
+<nav class="tabs" role="tablist" aria-label="Navigasi utama">
+  <button role="tab" aria-selected="true" data-target="beranda">🏠 Beranda</button>
+  <button role="tab" aria-selected="false" data-target="anggota">👥 Anggota</button>
+  <button role="tab" aria-selected="false" data-target="program">📅 Program</button>
+  <button role="tab" aria-selected="false" data-target="marketplace">🛍️ Marketplace</button>
+  <button role="tab" aria-selected="false" data-target="forum">💬 Forum</button>
+  <button role="tab" aria-selected="false" data-target="dashboard">📊 Dashboard</button>
+  <button role="tab" aria-selected="false" data-target="privasi">🔒 Privasi Data</button>
+</nav>
+
+<main id="main">
+
+  <!-- ===================== BERANDA ===================== -->
+  <section id="beranda" class="panel active" role="tabpanel" aria-labelledby="tab-beranda">
+    <div class="hero">
+      <div>
+        <span class="eyebrow">Platform Komunitas Inklusif</span>
+        <h1>Satu Tempat untuk Belajar, Berkarya, dan Bersuara — Bersama KMH</h1>
+        <p>Mata Hati Connect membantu Komunitas Mata Hati (KMH) Surabaya mengelola data anggota, menjadwalkan program pelatihan, memasarkan karya UMKM, dan membuka ruang diskusi yang dapat diakses oleh siapa saja — termasuk teman tunanetra, tunarungu, tunadaksa, dan tunagrahita.</p>
+        <p class="hero-quote" id="quoteText">"Mata yang paling tajam bukanlah yang ada di wajah, melainkan yang ada di dalam hati." — Filosofi KMH, 2008</p>
+        <button class="btn btn-accent" id="btnListenQuote">🔊 Dengarkan kutipan ini</button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-box"><div class="num" id="statAnggota">-</div><div class="lbl">Anggota terdaftar di platform</div></div>
+        <div class="stat-box"><div class="num" id="statProgram">-</div><div class="lbl">Pendaftaran program aktif (Pelit, Peluk, Tepi)</div></div>
+        <div class="stat-box"><div class="num" id="statProduk">-</div><div class="lbl">Produk &amp; jasa UMKM di Marketplace</div></div>
+      </div>
+    </div>
+
+    <div class="grid grid-3">
+      <div class="card">
+        <h3>👁️ Tentang KMH</h3>
+        <p>Komunitas Mata Hati (KMH) berdiri sejak Juni 2000 dan resmi memakai nama "Mata Hati" sejak 2008. Berbasis di Rungkut Asri XIII, Surabaya, KMH memberdayakan anggota difabel — terutama tunanetra — melalui musik, pelatihan keterampilan, dan kewirausahaan, dengan jangkauan anggota dari Surabaya, Sidoarjo, Gresik, hingga Madura.</p>
+      </div>
+      <div class="card">
+        <h3>💡 Mengapa Platform Ini Dibutuhkan?</h3>
+        <p>KMH menjalankan tiga program rutin (Pelit, Peluk, Tepi) namun pendataan anggota, jadwal kegiatan, dan promosi UMKM masih dilakukan manual. Anggota yang tersebar di beberapa kota juga butuh kanal komunikasi yang ramah untuk pengguna tunanetra.</p>
+      </div>
+      <div class="card">
+        <h3>♿ Komitmen Aksesibilitas</h3>
+        <p>Setiap konten penting dapat <strong>didengarkan</strong> lewat tombol "🔊 Dengarkan", ukuran teks dapat diperbesar, dan tersedia mode kontras tinggi. Formulir dapat diisi dengan suara melalui tombol mikrofon. Desain mengikuti prinsip dasar WCAG 2.1 AA.</p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:1.1rem;">
+      <h3>🎯 Tiga Program Inti KMH yang Difasilitasi Platform</h3>
+      <div class="pill-row">
+        <span class="tag">Pelit — Pelatihan IT Tunanetra</span>
+        <span class="tag">Peluk — Pelatihan UMKM</span>
+        <span class="tag">Tepi — Terapi &amp; Pelatihan Pijat</span>
+      </div>
+      <p>Ketiga program ini menjadi alasan utama mengapa KMH membutuhkan sistem pendataan anggota, penjadwalan kegiatan, dan etalase produk yang terstruktur — sekaligus menjadi fondasi fitur utama Mata Hati Connect.</p>
+      <button class="btn btn-outline" data-goto="program">Lihat jadwal program →</button>
+    </div>
+  </section>
+
+  <!-- ===================== ANGGOTA ===================== -->
+  <section id="anggota" class="panel" role="tabpanel" aria-labelledby="tab-anggota">
+    <span class="eyebrow">Manajemen Anggota</span>
+    <h2>Profil &amp; Pendaftaran Anggota</h2>
+    <p class="section-intro">Setiap anggota baru mengisi profil singkat (jenis disabilitas, keahlian, dan lokasi) agar pengurus dapat mencocokkan dengan program yang tersedia. Data sensitif terkait disabilitas hanya digunakan untuk penyesuaian layanan dan dilindungi sesuai UU PDP (lihat tab Privasi Data).</p>
+
+    <div class="grid grid-2">
+      <div class="card">
+        <h3>📝 Formulir Pendaftaran Anggota</h3>
+        <form id="formAnggota">
+          <label for="inpNama">Nama lengkap</label>
+          <input type="text" id="inpNama" required placeholder="Contoh: Siti Aminah">
+
+          <label for="inpJenis">Jenis disabilitas</label>
+          <select id="inpJenis" required>
+            <option value="">— Pilih salah satu —</option>
+            <option>Tunanetra</option>
+            <option>Tunarungu</option>
+            <option>Tunadaksa</option>
+            <option>Tunagrahita</option>
+            <option>Tidak ingin menyebutkan</option>
+          </select>
+
+          <label for="inpKeahlian">Keahlian / minat</label>
+          <div class="input-with-btn">
+            <input type="text" id="inpKeahlian" required placeholder="Contoh: Musik, kerajinan, IT, pijat...">
+            <button type="button" class="btn btn-outline btn-sm" id="btnMicKeahlian" aria-label="Isi keahlian dengan suara">🎤</button>
+          </div>
+          <p class="field-hint">Tekan tombol mikrofon untuk mengisi kolom ini dengan suara (cocok untuk pengguna tunanetra).</p>
+
+          <label for="inpLokasi">Domisili</label>
+          <select id="inpLokasi" required>
+            <option value="">— Pilih kota —</option>
+            <option>Surabaya</option>
+            <option>Sidoarjo</option>
+            <option>Gresik</option>
+            <option>Madura</option>
+            <option>Lainnya</option>
+          </select>
+
+          <div class="checkbox-row">
+            <input type="checkbox" id="inpConsent" required>
+            <label for="inpConsent">Saya menyetujui data pribadi saya — termasuk informasi jenis disabilitas — disimpan dan dikelola oleh pengurus KMH sesuai UU PDP No. 27 Tahun 2022, hanya untuk keperluan pengelolaan komunitas.</label>
+          </div>
+
+          <button type="submit" class="btn btn-accent">Daftar sebagai Anggota</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h3>📋 Direktori Anggota (<span id="jumlahAnggota">0</span>)</h3>
+        <p>Status "Menunggu Verifikasi" akan berubah menjadi "Terverifikasi" setelah pengurus memeriksa data — sesuai alur Registrasi → Verifikasi Pengurus pada diagram sistem di Dashboard.</p>
+        <div style="overflow-x:auto;">
+          <table aria-label="Daftar anggota komunitas">
+            <thead>
+              <tr><th>Nama</th><th>Jenis Disabilitas</th><th>Keahlian</th><th>Domisili</th><th>Status</th></tr>
+            </thead>
+            <tbody id="tabelAnggota"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PROGRAM ===================== -->
+  <section id="program" class="panel" role="tabpanel" aria-labelledby="tab-program">
+    <span class="eyebrow">Penjadwalan Program</span>
+    <h2>Pelit, Peluk &amp; Tepi — Jadwal dan Pendaftaran</h2>
+    <p class="section-intro">Pilih sesi yang tersedia lalu tekan "Daftar Sesi". Setelah berhasil mendaftar, sistem mengirimkan notifikasi yang juga dapat didengarkan — sangat membantu anggota tunanetra untuk konfirmasi kehadiran.</p>
+    <div id="daftarProgram"></div>
+  </section>
+
+  <!-- ===================== MARKETPLACE ===================== -->
+  <section id="marketplace" class="panel" role="tabpanel" aria-labelledby="tab-marketplace">
+    <span class="eyebrow">Pemberdayaan Ekonomi</span>
+    <h2>Marketplace Karya &amp; Jasa Anggota</h2>
+    <p class="section-intro">Etalase digital untuk produk UMKM dan jasa (misalnya layanan pijat dari program Tepi) hasil karya anggota KMH. Anggota terverifikasi dapat menambahkan produk baru.</p>
+
+    <div class="card" style="margin-bottom:1.2rem;">
+      <h3>➕ Tambah Produk / Jasa</h3>
+      <form id="formProduk" class="grid grid-2">
+        <div>
+          <label for="prodNama">Nama produk / jasa</label>
+          <input type="text" id="prodNama" required placeholder="Contoh: Tas anyaman pandan">
+        </div>
+        <div>
+          <label for="prodPenjual">Nama penjual</label>
+          <input type="text" id="prodPenjual" required placeholder="Nama anggota">
+        </div>
+        <div>
+          <label for="prodKategori">Kategori</label>
+          <select id="prodKategori" required>
+            <option>Kerajinan</option>
+            <option>Jasa</option>
+            <option>Kuliner</option>
+            <option>Lainnya</option>
+          </select>
+        </div>
+        <div>
+          <label for="prodHarga">Harga (Rp)</label>
+          <input type="number" id="prodHarga" required min="0" placeholder="Contoh: 75000">
+        </div>
+        <div style="grid-column:1/-1;">
+          <label for="prodDeskripsi">Deskripsi singkat</label>
+          <textarea id="prodDeskripsi" rows="2" required placeholder="Ceritakan produk/jasa ini secara singkat"></textarea>
+        </div>
+        <div style="grid-column:1/-1;">
+          <button type="submit" class="btn btn-accent">Tambahkan ke Marketplace</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="grid grid-3" id="daftarProduk"></div>
+  </section>
+
+  <!-- ===================== FORUM ===================== -->
+  <section id="forum" class="panel" role="tabpanel" aria-labelledby="tab-forum">
+    <span class="eyebrow">Komunikasi Internal</span>
+    <h2>Forum Komunitas (Ramah Tunanetra)</h2>
+    <p class="section-intro">Setiap postingan dapat dibacakan dengan tombol "🔊 Dengarkan", dan postingan baru dapat ditulis menggunakan suara melalui tombol mikrofon — tanpa harus melihat layar atau mengetik.</p>
+
+    <div class="card" style="margin-bottom:1.2rem;">
+      <h3>✍️ Tulis Postingan Baru</h3>
+      <form id="formForum">
+        <label for="forumPenulis">Nama Anda</label>
+        <input type="text" id="forumPenulis" required placeholder="Nama Anda">
+        <label for="forumIsi">Pesan</label>
+        <div class="input-with-btn">
+          <textarea id="forumIsi" rows="2" required placeholder="Tulis pesan, atau gunakan tombol mikrofon di samping..."></textarea>
+          <button type="button" class="btn btn-outline btn-sm" id="btnMicForum" aria-label="Isi pesan dengan suara">🎤</button>
+        </div>
+        <button type="submit" class="btn btn-accent">Kirim ke Forum</button>
+      </form>
+    </div>
+
+    <div class="card" id="daftarForum"></div>
+  </section>
+
+  <!-- ===================== DASHBOARD ===================== -->
+  <section id="dashboard" class="panel" role="tabpanel" aria-labelledby="tab-dashboard">
+    <span class="eyebrow">Untuk Pengurus</span>
+    <h2>Dashboard Pemantauan Komunitas</h2>
+    <p class="section-intro">Ringkasan otomatis dari data anggota, partisipasi program, dan alur sistem secara keseluruhan — memudahkan pengurus melihat siapa yang aktif dan program mana yang paling diminati.</p>
+
+    <div class="grid grid-3 stat-grid" style="margin-bottom:1.4rem;">
+      <div class="card"><div class="num" id="dashAnggota">0</div><div class="lbl">Total anggota terdaftar</div></div>
+      <div class="card"><div class="num" id="dashPendaftaran">0</div><div class="lbl">Total pendaftaran sesi program</div></div>
+      <div class="card"><div class="num" id="dashProduk">0</div><div class="lbl">Produk/jasa di Marketplace</div></div>
+    </div>
+
+    <div class="grid grid-2" style="margin-bottom:1.4rem;">
+      <div class="card">
+        <h3>Distribusi Jenis Disabilitas Anggota</h3>
+        <div id="donutWrap" style="display:flex; gap:1.4rem; align-items:center; flex-wrap:wrap;">
+          <div class="donut" id="donutChart"><div class="donut-center"><span id="donutTotal">0</span><small>anggota</small></div></div>
+          <div class="legend" id="donutLegend"></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Tingkat Keterisian Kuota per Program</h3>
+        <div id="barChart"></div>
+        <p class="field-hint" style="margin-top:.6rem;">Persentase total kursi terisi dibandingkan total kuota pada seluruh sesi tiap program.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🔄 Alur Sistem: Dari Pendaftaran Hingga Laporan</h3>
+      <p>Diagram berikut menjawab kebutuhan utama platform: bagaimana data anggota mengalir dari pendaftaran sampai menjadi laporan partisipasi untuk pengurus — termasuk titik di mana notifikasi audio digunakan agar anggota tunanetra tetap mendapat informasi.</p>
+      <div class="flowchart">
+        <div class="flow-step"><span class="step-no">1</span>Registrasi Anggota</div>
+        <div class="flow-arrow" aria-hidden="true">→</div>
+        <div class="flow-step"><span class="step-no">2</span>Verifikasi Pengurus</div>
+        <div class="flow-arrow" aria-hidden="true">→</div>
+        <div class="flow-step"><span class="step-no">3</span>Akses Program</div>
+        <div class="flow-arrow" aria-hidden="true">→</div>
+        <div class="flow-step"><span class="step-no">4</span>Daftar Kegiatan</div>
+        <div class="flow-arrow" aria-hidden="true">→</div>
+        <div class="flow-step"><span class="step-no">5</span>Notifikasi Audio</div>
+        <div class="flow-arrow" aria-hidden="true">→</div>
+        <div class="flow-step"><span class="step-no">6</span>Konfirmasi Kehadiran</div>
+        <div class="flow-arrow" aria-hidden="true">→</div>
+        <div class="flow-step"><span class="step-no">7</span>Laporan Pengurus</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PRIVASI ===================== -->
+  <section id="privasi" class="panel" role="tabpanel" aria-labelledby="tab-privasi">
+    <span class="eyebrow">Perlindungan Data</span>
+    <h2>Privasi Data &amp; Kepatuhan UU PDP</h2>
+    <p class="section-intro">Karena platform ini mengumpulkan data jenis disabilitas — termasuk dalam kategori data pribadi bersifat spesifik menurut UU No. 27 Tahun 2022 tentang Pelindungan Data Pribadi (UU PDP) — pengelolaannya memerlukan perlakuan khusus.</p>
+
+    <div class="privacy-box">
+      <h3>📜 Dasar Hukum</h3>
+      <p>UU PDP mengatur bahwa pemrosesan data pribadi kelompok rentan, termasuk penyandang disabilitas, wajib diselenggarakan secara khusus (mengacu pada prinsip Pasal 25 dan Pasal 26 UU No. 27 Tahun 2022). Data mengenai kondisi disabilitas tergolong data pribadi yang bersifat spesifik karena potensi risikonya jika disalahgunakan, misalnya untuk diskriminasi.</p>
+    </div>
+
+    <div class="grid grid-2">
+      <div class="card">
+        <h3>✅ Prinsip yang Diterapkan Platform</h3>
+        <p><strong>1. Persetujuan eksplisit (consent).</strong> Formulir pendaftaran anggota mewajibkan centang persetujuan sebelum data jenis disabilitas dapat disimpan.</p>
+        <p><strong>2. Minimalisasi data.</strong> Hanya data yang relevan untuk penyesuaian layanan (jenis disabilitas, keahlian, lokasi) yang diminta — tanpa data medis rinci.</p>
+        <p><strong>3. Pembatasan akses.</strong> Detail jenis disabilitas hanya tampil ke pengurus terverifikasi pada Dashboard, bukan ditampilkan secara publik di Marketplace atau Forum.</p>
+        <p><strong>4. Hak subjek data.</strong> Anggota dapat meminta pengurus untuk memperbarui atau menghapus data pribadinya kapan saja.</p>
+      </div>
+      <div class="card">
+        <h3>👤 Siapa yang Mengakses Data Apa?</h3>
+        <table>
+          <thead><tr><th>Pengguna</th><th>Akses Data</th></tr></thead>
+          <tbody>
+            <tr><td>Anggota</td><td>Profil sendiri, jadwal program, marketplace, forum</td></tr>
+            <tr><td>Pengurus / Relawan</td><td>Verifikasi anggota, data peserta program, dashboard partisipasi</td></tr>
+            <tr><td>Mitra UMKM / Instansi</td><td>Hanya katalog Marketplace (tanpa data disabilitas)</td></tr>
+            <tr><td>Admin Sistem</td><td>Pemeliharaan teknis &amp; keamanan, tanpa mengubah isi data pribadi</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top:1rem;">Pembagian akses ini menjawab kebutuhan tugas mengenai identifikasi pengguna sistem sekaligus menerapkan prinsip pembatasan akses dalam UU PDP.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p><strong>Mata Hati Connect</strong> — Prototype tugas akhir mata kuliah TIK dalam Pembangunan.</p>
+  <p>Studi kasus: Komunitas Mata Hati (KMH) Surabaya, Sekretariat Jl. Rungkut Asri XIII, Surabaya. Data pada prototype ini merupakan data simulasi untuk keperluan demonstrasi.</p>
+</footer>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* =========================================================
+   DATA AWAL (SIMULASI) — pada implementasi nyata data ini
+   akan berasal dari database / API komunitas.
+   ========================================================= */
+let members = [
+  {nama:"Danny Heru", jenis:"Tunanetra", keahlian:"Musik (Gitar), Pelatih Pelit", lokasi:"Surabaya", status:"Terverifikasi"},
+  {nama:"Prana Carenza", jenis:"Tunanetra", keahlian:"Musik (Bass)", lokasi:"Surabaya", status:"Terverifikasi"},
+  {nama:"Fadlakal 'Ipunk' Ghofur", jenis:"Tunarungu", keahlian:"Musik (Perkusi), Kerajinan tangan", lokasi:"Sidoarjo", status:"Terverifikasi"},
+  {nama:"Erna Tirta", jenis:"Tunadaksa", keahlian:"Pijat Terapi (Tepi), Wirausaha", lokasi:"Gresik", status:"Terverifikasi"},
+  {nama:"Bagas Saputra", jenis:"Tunagrahita", keahlian:"Kerajinan Anyaman", lokasi:"Madura", status:"Terverifikasi"},
+  {nama:"Ika Pratiwi", jenis:"Tunanetra", keahlian:"Pelatihan IT (Pelit), Penulisan", lokasi:"Surabaya", status:"Terverifikasi"}
+];
+
+let programs = {
+  pelit:{
+    nama:"Pelit — Pelatihan IT Tunanetra",
+    deskripsi:"Program pelatihan penggunaan komputer dan ponsel berbasis pembaca layar (screen reader) untuk anggota tunanetra.",
+    sesi:[
+      {topik:"Dasar Pembaca Layar (NVDA)", tanggal:"22 Jun 2026", lokasi:"Sekretariat KMH, Rungkut Asri XIII/16", kuota:12, terisi:8},
+      {topik:"Microsoft Word dengan JAWS", tanggal:"06 Jul 2026", lokasi:"Online via Zoom", kuota:15, terisi:10}
+    ]
+  },
+  peluk:{
+    nama:"Peluk — Pelatihan UMKM",
+    deskripsi:"Pelatihan kewirausahaan, fotografi produk, dan strategi penjualan daring bagi anggota yang merintis usaha kecil.",
+    sesi:[
+      {topik:"Fotografi Produk dengan Ponsel", tanggal:"25 Jun 2026", lokasi:"Sekretariat KMH", kuota:10, terisi:6},
+      {topik:"Strategi Jualan via Marketplace Online", tanggal:"10 Jul 2026", lokasi:"Online via Zoom", kuota:20, terisi:14}
+    ]
+  },
+  tepi:{
+    nama:"Tepi — Terapi &amp; Pelatihan Pijat",
+    deskripsi:"Pelatihan keterampilan pijat refleksi bersertifikat serta koordinasi layanan pijat panggilan bagi anggota.",
+    sesi:[
+      {topik:"Sertifikasi Dasar Pijat Refleksi", tanggal:"01 Jul 2026", lokasi:"Sekretariat KMH", kuota:8, terisi:8},
+      {topik:"Praktik Pijat Panggilan", tanggal:"Setiap Sabtu", lokasi:"Area Surabaya–Sidoarjo", kuota:5, terisi:3}
+    ]
+  }
+};
+
+let products = [
+  {nama:"Jasa Pijat Panggilan Tepi", penjual:"Erna Tirta", harga:75000, kategori:"Jasa", icon:"💆", deskripsi:"Layanan pijat relaksasi & terapi oleh anggota tersertifikasi KMH, area Surabaya-Sidoarjo."},
+  {nama:"Anyaman Tas Pandan", penjual:"Bagas Saputra", harga:95000, kategori:"Kerajinan", icon:"👜", deskripsi:"Tas anyaman pandan motif khas Madura dengan teknik anyaman ganda."},
+  {nama:"Lampion Hias Bambu", penjual:"Fadlakal Ghofur", harga:60000, kategori:"Kerajinan", icon:"🏮", deskripsi:"Lampion hias dari bambu dan kertas daur ulang, cocok untuk dekorasi rumah."},
+  {nama:"Kopi Bubuk Robusta KMH", penjual:"Ika Pratiwi", harga:35000, kategori:"Kuliner", icon:"☕", deskripsi:"Kopi bubuk hasil kemitraan UMKM anggota, dikemas 200 gram."}
+];
+
+let forumPosts = [
+  {penulis:"Danny Heru", waktu:"2 hari lalu", isi:"Halo teman-teman, jangan lupa sesi Pelit minggu ini membahas pintasan keyboard NVDA. Yang belum daftar bisa langsung ke tab Program ya."},
+  {penulis:"Ika Pratiwi", waktu:"1 hari lalu", isi:"Terima kasih untuk pelatihan Peluk kemarin, sangat membantu untuk foto produk jualan saya. Semoga rutin diadakan lagi."},
+  {penulis:"Erna Tirta", waktu:"5 jam lalu", isi:"Ada yang butuh jasa pijat panggilan area Sidoarjo akhir pekan ini? Slot masih tersedia 2."}
+];
+
+/* =========================================================
+   UTILITAS
+   ========================================================= */
+function formatRupiah(n){
+  return "Rp " + n.toLocaleString("id-ID");
+}
+
+function showToast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(()=> t.classList.remove("show"), 3200);
+}
+
+function speak(text){
+  if(!("speechSynthesis" in window)){
+    showToast("Fitur baca suara tidak didukung di browser ini.");
+    return;
+  }
+  window.speechSynthesis.cancel();
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = "id-ID";
+  utter.rate = 0.95;
+  window.speechSynthesis.speak(utter);
+}
+
+function startVoiceInput(targetId, appendMode){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR){
+    showToast("Input suara tidak didukung di browser ini. Silakan ketik manual.");
+    return;
+  }
+  const rec = new SR();
+  rec.lang = "id-ID";
+  rec.interimResults = false;
+  rec.maxAlternatives = 1;
+  showToast("Mendengarkan... silakan bicara.");
+  rec.onresult = function(e){
+    const text = e.results[0][0].transcript;
+    const field = document.getElementById(targetId);
+    if(appendMode && field.value.trim().length){
+      field.value = field.value.trim() + " " + text;
+    } else {
+      field.value = text;
+    }
+    showToast("Suara berhasil dikenali.");
+  };
+  rec.onerror = function(){
+    showToast("Tidak dapat mengenali suara, silakan coba lagi atau ketik manual.");
+  };
+  rec.start();
+}
+
+/* =========================================================
+   TAB NAVIGATION
+   ========================================================= */
+const tabButtons = document.querySelectorAll('.tabs button');
+const panels = document.querySelectorAll('.panel');
+
+function activatePanel(id){
+  panels.forEach(p => p.classList.toggle('active', p.id === id));
+  tabButtons.forEach(b => b.setAttribute('aria-selected', b.dataset.target === id ? 'true' : 'false'));
+  window.scrollTo({top:0, behavior:'smooth'});
+  if(document.getElementById('btnAutoRead').getAttribute('aria-pressed') === 'true'){
+    const panel = document.getElementById(id);
+    const heading = panel.querySelector('h2');
+    const firstPara = panel.querySelector('p');
+    let text = heading ? heading.textContent : '';
+    if(firstPara) text += ". " + firstPara.textContent;
+    speak(text);
+  }
+}
+
+tabButtons.forEach(btn => {
+  btn.addEventListener('click', () => activatePanel(btn.dataset.target));
+});
+
+document.querySelectorAll('[data-goto]').forEach(btn => {
+  btn.addEventListener('click', () => activatePanel(btn.dataset.goto));
+});
+
+/* =========================================================
+   TOOLBAR AKSESIBILITAS
+   ========================================================= */
+let fontStep = 0; // -1, 0, 1, 2
+function applyFontSize(){
+  const sizes = {"-1":"15px", "0":"16px", "1":"18px", "2":"20px"};
+  document.documentElement.style.fontSize = sizes[String(fontStep)];
+}
+document.getElementById('btnFontUp').addEventListener('click', () => {
+  if(fontStep < 2){ fontStep++; applyFontSize(); }
+});
+document.getElementById('btnFontDown').addEventListener('click', () => {
+  if(fontStep > -1){ fontStep--; applyFontSize(); }
+});
+document.getElementById('btnFontReset').addEventListener('click', () => {
+  fontStep = 0; applyFontSize();
+});
+
+document.getElementById('btnContrast').addEventListener('click', function(){
+  const active = document.documentElement.classList.toggle('contrast-high');
+  this.setAttribute('aria-pressed', active ? 'true' : 'false');
+  showToast(active ? "Mode kontras tinggi diaktifkan." : "Mode kontras tinggi dimatikan.");
+});
+
+document.getElementById('btnAutoRead').addEventListener('click', function(){
+  const active = this.getAttribute('aria-pressed') !== 'true';
+  this.setAttribute('aria-pressed', active ? 'true' : 'false');
+  showToast(active ? "Mode baca otomatis diaktifkan: setiap pindah halaman akan dibacakan." : "Mode baca otomatis dimatikan.");
+});
+
+document.getElementById('btnListenQuote').addEventListener('click', () => {
+  speak(document.getElementById('quoteText').textContent);
+});
+
+/* =========================================================
+   RENDER: ANGGOTA
+   ========================================================= */
+function renderMembers(){
+  const tbody = document.getElementById('tabelAnggota');
+  tbody.innerHTML = '';
+  members.forEach(m => {
+    const tr = document.createElement('tr');
+    const statusClass = m.status === 'Terverifikasi' ? 'status-terverifikasi' : 'status-menunggu';
+    tr.innerHTML = `
+      <td>${m.nama}</td>
+      <td>${m.jenis}</td>
+      <td>${m.keahlian}</td>
+      <td>${m.lokasi}</td>
+      <td><span class="status-badge ${statusClass}">${m.status}</span></td>
+    `;
+    tbody.appendChild(tr);
+  });
+  document.getElementById('jumlahAnggota').textContent = members.length;
+}
+
+document.getElementById('formAnggota').addEventListener('submit', function(e){
+  e.preventDefault();
+  const nama = document.getElementById('inpNama').value.trim();
+  const jenis = document.getElementById('inpJenis').value;
+  const keahlian = document.getElementById('inpKeahlian').value.trim();
+  const lokasi = document.getElementById('inpLokasi').value;
+  const consent = document.getElementById('inpConsent').checked;
+
+  if(!consent){
+    showToast("Mohon centang persetujuan penggunaan data sebelum mendaftar.");
+    return;
+  }
+
+  members.push({nama, jenis, keahlian, lokasi, status:"Menunggu Verifikasi"});
+  renderMembers();
+  renderDashboard();
+  this.reset();
+  speak(`Pendaftaran berhasil. Terima kasih ${nama}, data Anda akan diverifikasi oleh pengurus KMH.`);
+  showToast(`Pendaftaran ${nama} berhasil dan menunggu verifikasi pengurus.`);
+});
+
+document.getElementById('btnMicKeahlian').addEventListener('click', () => startVoiceInput('inpKeahlian', false));
+
+/* =========================================================
+   RENDER: PROGRAM
+   ========================================================= */
+function renderPrograms(){
+  const wrap = document.getElementById('daftarProgram');
+  wrap.innerHTML = '';
+  Object.entries(programs).forEach(([key, prog]) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.style.marginBottom = '1.2rem';
+    let sessionsHtml = '';
+    prog.sesi.forEach((s, idx) => {
+      const pct = Math.min(100, Math.round((s.terisi / s.kuota) * 100));
+      const penuh = s.terisi >= s.kuota;
+      sessionsHtml += `
+        <div class="session">
+          <div class="session-info">
+            <strong>${s.topik}</strong>
+            <span>🗓️ ${s.tanggal} • 📍 ${s.lokasi}</span>
+          </div>
+          <div class="session-meta">
+            <div class="progress" aria-hidden="true"><div style="width:${pct}%"></div></div>
+            <span>${s.terisi}/${s.kuota} peserta</span>
+            <button class="btn btn-sm ${penuh ? 'btn-outline' : 'btn-accent'}" data-prog="${key}" data-idx="${idx}" ${penuh ? 'disabled' : ''}>
+              ${penuh ? 'Kuota Penuh' : 'Daftar Sesi'}
+            </button>
+          </div>
+        </div>
+      `;
+    });
+    card.innerHTML = `
+      <h3>${prog.nama}</h3>
+      <p>${prog.deskripsi}</p>
+      ${sessionsHtml}
+    `;
+    wrap.appendChild(card);
+  });
+
+  wrap.querySelectorAll('button[data-prog]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const prog = programs[btn.dataset.prog];
+      const sesi = prog.sesi[parseInt(btn.dataset.idx)];
+      if(sesi.terisi >= sesi.kuota) return;
+      sesi.terisi++;
+      renderPrograms();
+      renderDashboard();
+      const msg = `Pendaftaran berhasil untuk sesi ${sesi.topik}, pada ${sesi.tanggal}, di ${sesi.lokasi}. Notifikasi audio ini juga berfungsi sebagai konfirmasi kehadiran Anda.`;
+      speak(msg);
+      showToast("Pendaftaran sesi berhasil! Notifikasi audio telah dibacakan.");
+    });
+  });
+}
+
+/* =========================================================
+   RENDER: MARKETPLACE
+   ========================================================= */
+function renderMarketplace(){
+  const wrap = document.getElementById('daftarProduk');
+  wrap.innerHTML = '';
+  products.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="product-icon" aria-hidden="true">${p.icon}</div>
+      <h3>${p.nama}</h3>
+      <p>${p.deskripsi}</p>
+      <p class="price">${formatRupiah(p.harga)}</p>
+      <p class="field-hint" style="margin-bottom:.6rem;">Oleh: ${p.penjual} • Kategori: ${p.kategori}</p>
+      <button class="btn listen-btn btn-listen-product">🔊 Dengarkan deskripsi</button>
+    `;
+    card.querySelector('.btn-listen-product').addEventListener('click', () => {
+      speak(`${p.nama}, oleh ${p.penjual}. ${p.deskripsi} Harga ${formatRupiah(p.harga)}.`);
+    });
+    wrap.appendChild(card);
+  });
+  document.getElementById('statProduk').textContent = products.length;
+}
+
+document.getElementById('formProduk').addEventListener('submit', function(e){
+  e.preventDefault();
+  const nama = document.getElementById('prodNama').value.trim();
+  const penjual = document.getElementById('prodPenjual').value.trim();
+  const kategori = document.getElementById('prodKategori').value;
+  const harga = parseInt(document.getElementById('prodHarga').value, 10) || 0;
+  const deskripsi = document.getElementById('prodDeskripsi').value.trim();
+  const iconMap = {"Kerajinan":"🧶", "Jasa":"🛎️", "Kuliner":"🍪", "Lainnya":"📦"};
+
+  products.push({nama, penjual, harga, kategori, deskripsi, icon: iconMap[kategori] || "📦"});
+  renderMarketplace();
+  renderDashboard();
+  this.reset();
+  showToast(`Produk "${nama}" berhasil ditambahkan ke Marketplace.`);
+});
+
+/* =========================================================
+   RENDER: FORUM
+   ========================================================= */
+function renderForum(){
+  const wrap = document.getElementById('daftarForum');
+  wrap.innerHTML = '';
+  forumPosts.forEach(post => {
+    const div = document.createElement('div');
+    div.className = 'post';
+    div.innerHTML = `
+      <div class="post-head">
+        <strong>${post.penulis}</strong>
+        <span class="post-time">${post.waktu}</span>
+      </div>
+      <p>${post.isi}</p>
+      <button class="listen-btn btn-listen-post">🔊 Dengarkan</button>
+    `;
+    div.querySelector('.btn-listen-post').addEventListener('click', () => {
+      speak(`${post.penulis} menulis: ${post.isi}`);
+    });
+    wrap.appendChild(div);
+  });
+}
+
+document.getElementById('formForum').addEventListener('submit', function(e){
+  e.preventDefault();
+  const penulis = document.getElementById('forumPenulis').value.trim();
+  const isi = document.getElementById('forumIsi').value.trim();
+  forumPosts.unshift({penulis, waktu:"Baru saja", isi});
+  renderForum();
+  this.reset();
+  showToast("Postingan terkirim ke forum.");
+});
+
+document.getElementById('btnMicForum').addEventListener('click', () => startVoiceInput('forumIsi', true));
+
+/* =========================================================
+   RENDER: DASHBOARD
+   ========================================================= */
+const DISABILITY_COLORS = {
+  "Tunanetra": "#E8A33D",
+  "Tunarungu": "#D9694F",
+  "Tunadaksa": "#1F4959",
+  "Tunagrahita": "#7FB3A8",
+  "Tidak ingin menyebutkan": "#B7AFA1"
+};
+
+function renderDashboard(){
+  // Stat cards
+  document.getElementById('statAnggota').textContent = members.length;
+  document.getElementById('dashAnggota').textContent = members.length;
+
+  let totalPendaftaran = 0;
+  Object.values(programs).forEach(p => p.sesi.forEach(s => totalPendaftaran += s.terisi));
+  document.getElementById('statProgram').textContent = totalPendaftaran;
+  document.getElementById('dashPendaftaran').textContent = totalPendaftaran;
+  document.getElementById('dashProduk').textContent = products.length;
+
+  // Donut chart: distribusi jenis disabilitas
+  const counts = {};
+  members.forEach(m => { counts[m.jenis] = (counts[m.jenis] || 0) + 1; });
+
+  let gradientParts = [];
+  let cumulative = 0;
+  const legend = document.getElementById('donutLegend');
+  legend.innerHTML = '';
+  Object.entries(counts).forEach(([jenis, count]) => {
+    const pct = (count / members.length) * 100;
+    const color = DISABILITY_COLORS[jenis] || "#999999";
+    gradientParts.push(`${color} ${cumulative}% ${cumulative + pct}%`);
+    cumulative += pct;
+
+    const item = document.createElement('div');
+    item.className = 'legend-item';
+    item.innerHTML = `<span class="legend-dot" style="background:${color}"></span> ${jenis}: ${count} (${pct.toFixed(0)}%)`;
+    legend.appendChild(item);
+  });
+  document.getElementById('donutChart').style.background = `conic-gradient(${gradientParts.join(', ')})`;
+  document.getElementById('donutTotal').textContent = members.length;
+
+  // Bar chart: keterisian kuota per program
+  const barWrap = document.getElementById('barChart');
+  barWrap.innerHTML = '';
+  Object.values(programs).forEach(prog => {
+    let totalKuota = 0, totalTerisi = 0;
+    prog.sesi.forEach(s => { totalKuota += s.kuota; totalTerisi += s.terisi; });
+    const pct = Math.round((totalTerisi / totalKuota) * 100);
+    const row = document.createElement('div');
+    row.className = 'bar-row';
+    row.innerHTML = `
+      <span>${prog.nama.split('—')[0].trim()}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+      <span>${pct}%</span>
+    `;
+    barWrap.appendChild(row);
+  });
+}
+
+/* =========================================================
+   INISIALISASI
+   ========================================================= */
+applyFontSize();
+renderMembers();
+renderPrograms();
+renderMarketplace();
+renderForum();
+renderDashboard();
+</script>
+
+</body>
+</html>
